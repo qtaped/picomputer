@@ -1,0 +1,206 @@
+;  Polybar.
+;  https://github.com/polybar/polybar
+;      _ _____                   _           
+;  ___|_|     |___ _____ ___ _ _| |_ ___ ___ 
+; | . | |   --| . |     | . | | |  _| -_|  _|
+; |  _|_|_____|___|_|_|_|  _|___|_| |___|_|  
+; |_|                   |_|                  
+
+
+[settings]
+screenchange-reload = true
+pseudo-transparency = false
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+[colors]
+background = #111111
+bgalt = #1B1B1B
+foreground = #C8C8C8
+fgalt = #959595
+fgdark = #181818
+fgdark2 = #454545
+red = #CC0000
+
+[fonts]
+font0 = SF Compact Text:style=Regular:size=14;2
+font1 = SF Compact Text:style=Semibold:size=14;2
+font2 = Material\-Design\-Iconic\-Font:size=15;2
+font3 = SF Compact Text:style=Regular:size=11;2
+
+
+;  _
+; | |__   __ _ _ __ ___
+; | '_ \ / _` | '__/ __|
+; | |_) | (_| | |  \__ \
+; |_.__/ \__,_|_|  |___/
+
+[bar/top]
+enable-ipc=false
+height = 32
+width = 100%
+padding = 0
+radius-top = 10
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 4
+
+font-0 = ${fonts.font0}
+font-1 = ${fonts.font1}
+font-2 = ${fonts.font2}
+font-3 = ${fonts.font3}
+
+modules-left = i3 uptime memory music
+modules-center = xwindow
+modules-right = wlan pulseaudio pibattery time
+
+
+;  _ __ ___   ___   __| |_   _| | ___  ___
+; | '_ ` _ \ / _ \ / _` | | | | |/ _ \/ __|
+; | | | | | | (_) | (_| | |_| | |  __/\__ \
+; |_| |_| |_|\___/ \__,_|\__,_|_|\___||___/
+
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:80:...%
+label-empty =
+label-empty-font = 3
+label-font = 2
+
+[module/i3]
+type = internal/i3
+format = <label-state><label-mode>
+format-margin = 0
+index-sort = true
+format-font = 2
+
+enable-click = true
+reverse-scroll = false
+
+label-focused = %index%
+label-focused-background = ${colors.foreground}
+label-focused-foreground = ${colors.fgdark}
+label-focused-padding = 3
+
+label-unfocused = %index%
+label-unfocused-background = ${colors.bgalt}
+label-unfocused-padding = 3
+
+label-urgent = %index%
+label-urgent-padding = 3
+label-urgent-foreground = ${colors.fgdark}
+label-urgent-background = ${colors.red}
+
+label-mode = %mode%
+label-mode-padding = 3
+label-mode-marging = 0
+label-mode-font = 3
+label-mode-background = ${colors.red}
+label-mode-foreground = ${colors.fgdark}
+
+label-visible= %index%
+label-visible-padding = 3
+label-visible-marging = 0
+label-visible-underline = ${colors.foreground}
+
+[module/music]
+type = custom/script
+label = %output:0:64:...%
+label-font = 4
+click-left = mocp -G
+click-middle = urxvt -e mocp &
+click-right = mocp -f
+format-padding = 3
+exec-if = pgrep -x mocp
+exec = ~/.picomputer/scripts/music.sh
+interval=3
+
+[module/memory]
+type = internal/memory
+interval = 3
+format = <label>
+label = %mb_free% free
+format-padding = 3
+format-foreground = ${colors.fgdark2}
+
+[module/bluetooth]
+type = custom/script
+exec = ~/.picomputer/scripts/bluetooth.sh
+tail = true
+click-left = ~/.picomputer/scripts/bluetooth.sh --toggle
+click-middle = urxvt -e ~/.sh/bluetooth.sh
+label-font = 4
+format-padding = 3
+format-foreground = ${colors.fgdark2}
+format-background = ${colors.bgalt}
+
+[module/pibattery]
+type = custom/script
+label =  %output%
+exec = ~/.picomputer/scripts/battery.py
+interval = 60
+format-padding = 3
+
+[module/uptime]
+type = custom/script
+exec = ~/.picomputer/scripts/uptime.sh
+interval = 300
+format-padding = 3
+format-foreground = ${colors.fgdark2}
+
+
+[module/wlan]
+type = internal/network
+interface = wlan0
+interval = 3
+
+format-connected =%{A2:urxvt -e ~/.picomputer/scripts/wifictl.sh &:} <label-connected>%{A}
+format-connected-padding = 3
+label-connected = %essid:0:12:...%
+
+format-disconnected = %{A2:urxvt -e ~/.picomputer/scripts/wifictl.sh &:}%{A}
+format-disconnected-padding = 3
+
+
+[module/time]
+type = internal/date
+interval = 5
+format-margin = 0
+
+time = "%H:%M"
+date = "%Y-%m-%d"
+
+label =  %date%   %time%
+label-padding = 3
+label-background = ${colors.bgalt}
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume-margin = 0
+format-volume = %{A2:pavucontrol &:}<ramp-volume> <label-volume>%{A}
+label-volume = %percentage%%
+format-volume-alignment = center
+format-volume-padding = 3
+format-volume-background = ${colors.bgalt}
+use-ui-max = false
+interval = 0
+
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-volume-3 = 
+ramp-volume-4 = 
+
+label-muted = %{A2:pavucontrol &:} %percentage%% %{A}
+label-muted-padding = 3
+format-muted-foreground = ${colors.red}
+format-muted-background = ${colors.bgalt}
+
+
+; vim:ft=dosini

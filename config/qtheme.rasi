@@ -1,0 +1,166 @@
+/* global settings and color variables */
+* {
+   font: "SF Pro Text Regular 20";
+   red:              #aa0000;
+
+   dark1:            rgb(0,0,0);
+   dark2:            #3D3D3D;
+   dark3:            #666666;
+
+   light1:           #F7F7F7;
+   light2:           #A7A7A7;
+
+   background-color: @dark1;
+   border-color:     @dark2;
+   text-color:       @dark3;
+   dark-text-color:  @dark3;
+   main-color:       @light2;
+   highlight:        @light1;
+   urgent-color:     @red;
+   selected-color:   @light1;
+}
+
+window {
+   background-color: @background-color;
+   padding: 42px 0 42px 320px;
+   fullscreen: true;
+   border:  0;
+   border-radius: 0;
+   border-color: @border-color;
+}
+
+mainbox {
+   background-color: transparent;
+   spacing:12px;
+}
+
+message {
+   padding: 12px 20px;
+   background-color: transparent;
+}
+
+textbox {
+   text-color: @text-color;
+   background-color:transparent;
+}
+
+listview {
+   fixed-height: true;
+   dynamic: false;
+   scrollbar: false;
+   spacing: 12px;
+   padding: 1px 0px 0px 10px;
+   margin: 0px 0px 1px 0px;
+   background-color: transparent;
+}
+
+element {
+   padding: 4px 10px;
+}
+
+element-text {
+    background-color: inherit;
+    text-color:       inherit;
+}
+
+element-icon {
+    background-color: inherit;
+}
+
+element normal.normal {
+   padding: 0px 15px;
+   background-color: transparent;
+   text-color: @dark-text-color;
+}
+
+element normal.urgent {
+   background-color: transparent;
+   text-color: @urgent-color;
+}
+
+element normal.active {
+   background-color: transparent;
+   text-color: @main-color;
+}
+
+element selected.normal {
+    background-color: inherit;
+    text-color:       @selected-color;
+}
+
+element selected.urgent {
+    background-color: transparent;
+    text-color:       @urgent-color;
+}
+
+element selected.active {
+    background-color: transparent;
+    text-color:       @light1;
+}
+
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @dark-text-color;
+}
+
+element alternate.urgent {
+    background-color: transparent;
+    text-color:       @urgent-color;
+}
+
+element alternate.active {
+    background-color: transparent;
+    text-color:       @main-color;
+}
+
+scrollbar {
+   background-color: @background-color;
+   handle-color: transparent;
+   handle-width: 0px;
+}
+
+mode-switcher {
+   background-color: transparent;
+}
+
+button {
+   background-color: transparent;
+   text-color:       @text-color;
+}
+
+button selected {
+    text-color:       @main-color;
+}
+
+inputbar {
+   background-color: transparent;
+   spacing: 0px;
+   children:   [ prompt,textbox-prompt-colon,entry,case-indicator ];
+}
+
+prompt {
+   padding:0px 10px;
+   background-color: transparent;
+   text-color: @highlight;
+}
+
+entry {
+   padding:0px 20px;
+   background-color:transparent;
+   text-color:@light1;
+}
+
+case-indicator {
+   padding:6px 10px;
+   text-color:@main-color;
+   background-color:transparent;
+}
+
+#textbox-prompt-colon {
+	padding:0px 0px;
+    expand:     false;
+    str:        ":";
+    margin:     0px 0.3em 0em 0em ;
+    text-color: @highlight;
+    background-color:transparent;
+}

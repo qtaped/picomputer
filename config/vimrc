@@ -1,0 +1,26 @@
+set clipboard=unnamedplus
+set mouse=a
+set number
+set ignorecase
+set autoindent
+set smartcase
+set shell=zsh
+syntax on
+set noeb vb t_vb=
+let mapleader = ","
+
+set hlsearch "Highlights search terms"
+set incsearch "Highlights search terms as you type them"
+set showmatch "Highlights matching parentheses"
+nnoremap <CR> :noh<CR>
+
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+
+" Allow crosshair cursor highlighting.
+hi CursorLine   cterm=NONE ctermbg=0
+hi CursorColumn cterm=NONE ctermbg=0
+" set cursorline! cursorcolumn!
+nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
