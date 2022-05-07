@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # piComputer files installer
-# v0.5
+# v0.5.1
 # 2022-05-07
 # https://github.com/qtaped
 
@@ -14,7 +14,7 @@ echo "  | . | |   --| . |     | . | | |  _| -_|  _|"
 echo "  |  _|_|_____|___|_|_|_|  _|___|_| |___|_|  "
 echo "  |_|                   |_|                  "
 echo
-echo "  piComputer v0.5                       [$chapitre/4]"
+echo "  piComputer v0.5.1                     [$chapitre/4]"
 echo "  ..........................................."
 echo "  $msg"
 echo
@@ -65,7 +65,7 @@ while true; do
 
 [Yy]* )
 echo -e "\n:: Running apt...";
-sudo apt install vim i3 polybar dunst rofi scrot feh xss-lock pulseaudio unclutter xdotool moc ranger
+sudo apt install vim i3 polybar dunst rofi scrot feh xss-lock pulseaudio unclutter xdotool moc ranger tty-clock
 msg="Packages have been installed."
 break;;
 
@@ -134,6 +134,7 @@ sudo ln $ln_opt $HOME/.picomputer/config/motd /etc/motd
 ln $ln_opt $HOME/.picomputer/config/zshrc $HOME/.zshrc
 ln $ln_opt $HOME/.picomputer/config/zshrc.local $HOME/.zshrc.local
 ln $ln_opt $HOME/.picomputer/config/zprofile $HOME/.zprofile
+ln $ln_opt $HOME/.picomputer/config/Xresources $HOME/.Xresources
 ln $ln_opt $HOME/.picomputer/config/polybar $HOME/.config/polybar/config
 ln $ln_opt $HOME/.picomputer/config/i3 $HOME/.config/i3/config
 ln $ln_opt $HOME/.picomputer/config/dunstrc $HOME/.config/dunst/dunstrc
