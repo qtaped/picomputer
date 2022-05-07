@@ -5,6 +5,9 @@
 # 2022-05-07
 # https://github.com/qtaped
 
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+version=$(cat $SCRIPT_DIR/version)
+
 picomputersplash() {
 
 clear
@@ -14,7 +17,7 @@ echo "  | . | |   --| . |     | . | | |  _| -_|  _|"
 echo "  |  _|_|_____|___|_|_|_|  _|___|_| |___|_|  "
 echo "  |_|                   |_|                  "
 echo
-echo "  piComputer v0.5.1                     [$chapitre/4]"
+echo "  piComputer $version                    [$chapitre/4]"
 echo "  ..........................................."
 echo "  $msg"
 echo
@@ -96,7 +99,6 @@ else
 echo -e "\n:: No existing piComputer configuration found."
 fi
 
-SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 echo -n "  Removing $SCRIPT_DIR/.git"
 sudo rm -r $SCRIPT_DIR/.git
 echo "  ..........Ok"
