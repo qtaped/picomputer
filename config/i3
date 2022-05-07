@@ -59,8 +59,8 @@ bindsym XF86AudioMicMute exec amixer set Capture toggle
 # Screenshot scrot
 set $notif_screen dunstify -t 1500 -i cs-screen "Screenshot!" 
 set $screenshot scrot ~/images/screenshot_%F_%H%M%S.png
-bindsym --release $mod+p exec --no-startup-id $screenshot -s && $notif_screen
-bindsym $mod+shift+p exec --no-startup-id $screenshot && $notif_screen
+bindsym --release $mod+shift+p exec --no-startup-id $screenshot -s && $notif_screen
+bindsym $mod+p exec --no-startup-id $screenshot && $notif_screen
 
 # dunst / notifications
 bindsym $mod+$shift+n exec dunstctl close-all
@@ -84,7 +84,6 @@ bindsym $mod+Escape exec urxvt -e ~/.picomputer/scripts/poweroff.sh
 bindsym $mod+Return exec urxvt
 
 # start apps
-bindsym $mod+Shift+Return exec luakit
 bindsym $mod+n exec exec urxvt -e ranger &
 bindsym $mod+Shift+w exec urxvt -e ~/.picomputer/scripts/wifictl.sh &
 
@@ -256,3 +255,7 @@ exec_always --no-startup-id feh --bg-scale ~/.picomputer/images/background.png
 
 # Hide mouse cursor
 exec_always --no-startup-id unclutter -b --timeout 2
+
+# Start Apps 
+exec_always --no-startup-id urxvt -e tty-clock -cs -C 3
+exec_always --no-startup-id urxvt -e cat /etc/motd
