@@ -1,12 +1,10 @@
 #!/bin/bash
 
 # piComputer files installer
-# v0.5.1
-# 2022-05-07
 # https://github.com/qtaped
 
-SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-version=$(cat $SCRIPT_DIR/version)
+INSTALL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+version=$(cat $INSTALL_DIR/version)
 
 picomputersplash() {
 
@@ -99,16 +97,16 @@ else
 echo -e "\n:: No existing piComputer configuration found."
 fi
 
-echo -n "  Removing $SCRIPT_DIR/.git"
-sudo rm -r $SCRIPT_DIR/.git
-echo "  ..........Ok"
-echo -n "  Moving configuration files to $HOME/.picomputer"
-mv $SCRIPT_DIR $HOME/.picomputer
-echo "  ..........Ok"
+echo -n "  Copying configuration files to $HOME/.picomputer"
+mkdir -p $HOME/.picomputer
+cp -r $INSTALL_DIR/config $HOME/.picomputer
+cp -r $INSTALL_DIR/images $HOME/.picomputer
+cp -r $INSTALL_DIR/scripts $HOME/.picomputer
+echo "  [OK]"
 
 echo -n "  chmod +x scripts"
 chmod +x $HOME/.picomputer/scripts/*
-echo "  ..........Ok"
+echo "  [OK]"
 
 }
 
@@ -159,8 +157,9 @@ while true; do
 echo -e "\n:: Running...";
 setupdirs
 linkconfigfiles
-rm $HOME/.picomputer/install.sh
-echo -e "\n\n:: Done. All configuration files are here: $HOME/.picomputer";
+echo -e "\n\n:: Done. All configuration files are here: $HOME/.picomputer\n"
+echo "\n  Do you want to remove installation folder? [Y/n]"
+rm -rI $INSTALL_DIR
 echo
 exit;;
 
@@ -183,7 +182,7 @@ while true; do
 
    case $yn in
 [Yy]* )
-
+msg=" "
 installzsh
 installpkgs
 installconfig;;
@@ -192,6 +191,6 @@ installconfig;;
 echo -e "\n  :(\n"
 exit;;
 * )
-msg="Enter (y)es or (n)o";;
+msg="Enter (y)es or (n)o.";;
    esac
 done
