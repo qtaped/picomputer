@@ -157,10 +157,10 @@ while true; do
 echo -e "\n:: Running...";
 setupdirs
 linkconfigfiles
-echo -e "\n\n:: Done. All configuration files are here: $HOME/.picomputer\n"
-echo "\n  Do you want to remove installation folder? [Y/n]"
-rm -rI $INSTALL_DIR
-echo
+echo -e "\n:: Installation complete. Do you want to remove installation folder? [Y/n]"
+sudo rm -rI $INSTALL_DIR
+echo -e "\n\n:: Done. All configuration files are here: $HOME/.picomputer"
+echo -e "\n  enjoy!\n"
 exit;;
 
 [Nn]* )
