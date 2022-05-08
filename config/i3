@@ -15,7 +15,7 @@ set $mod Mod4
 set $alt Mod1
 
 # Font for window titles
-font pango:SF Compact Text Medium 11
+font pango:JetBrains Mono Bold 11
 title_align center
 
 # Disable titlebar
@@ -28,13 +28,13 @@ popup_during_fullscreen smart
 # Colors
 
 # class                 border   backgr. text    indicator child_border
-client.focused          #555555 #555555 #ffffff #660000 #555555
-client.focused_inactive #222222 #222222 #888888 #222222 #222222
-client.unfocused        #222222 #222222 #888888 #222222 #222222
-client.urgent           #660000 #660000 #ffffff #660000 #660000
+client.focused          #303030 #303030 #ffffff #ff8700 #303030
+client.focused_inactive #232323 #232323 #888888 #232323 #232323
+client.unfocused        #232323 #232323 #888888 #232323 #232323
+client.urgent           #ff8700 #ff8700 #ffffff #ff8700 #ff8700
 client.placeholder      #0c0c0c #0c0c0c #ffffff #000000 #0c0c0c
 
-client.background       #000000
+client.background       #232323
 
 # xss-lock will use i3lock to lock the screen before suspend. 
 # Use loginctl lock-session to lock your screen.
@@ -196,12 +196,12 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit' --font 'pango:SF Compact Text Regular 12'"
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit' --font 'pango:JetBrains Mono Regular 12'"
 
 
 # resize window (you can also use the mouse for that)
 
-mode ""{
+mode "↘"{
 
 # These bindings trigger as soon as you enter the resize mode
      
@@ -241,7 +241,7 @@ mode ""{
         bindsym $mod+r mode "default"
 }
 
-bindsym $mod+r mode ""
+bindsym $mod+r mode "↘"
 
 
 # xrandr
@@ -257,5 +257,4 @@ exec_always --no-startup-id feh --bg-scale ~/.picomputer/images/background.png
 exec_always --no-startup-id unclutter -b --timeout 2
 
 # Start Apps 
-exec_always --no-startup-id urxvt -e tty-clock -cs -C 3
-exec_always --no-startup-id urxvt -e cat /etc/motd
+exec_always --no-startup-id urxvt -e tty-clock -cs -C 2

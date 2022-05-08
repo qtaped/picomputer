@@ -19,6 +19,21 @@ adc = Adafruit_ADS1x15.ADS1015()
 # 448/4.48 = 100 (~ percentage)
 
 value = adc.read_adc(0, gain=1)
-level = str(round((value-1599)/4.48, 2))
+level = round((value-1599)/4.48, 2)
 
-print("{}%".format(level))
+if level > 80:
+  bar= '▪▪▪▪'
+elif level > 60:
+  bar= '▪▪▪▫'
+elif level > 40:
+  bar= '▪▪▫▫'
+elif level > 20:
+  bar= '▪▫▫▫'
+elif level > 5:
+  bar= '▫▫▫▫'
+elif 0 < level < 5:
+  bar= '△'
+else:
+  bar= '▲'
+
+print("{0} BAT[{1}%]".format(bar,level))

@@ -66,7 +66,9 @@ while true; do
 
 [Yy]* )
 echo -e "\n:: Running apt...";
-sudo apt install vim i3 polybar dunst rofi scrot feh xss-lock pulseaudio unclutter xdotool moc ranger tty-clock
+sudo apt install vim xserver-xorg i3 polybar dunst rofi scrot feh xss-lock pulseaudio unclutter xdotool moc ranger tty-clock python3-pip
+echo -e "\n:: Installing adafruit_ads1x15 for battery monitoring...";
+sudo pip3 install adafruit_ads1x15
 msg="Packages have been installed."
 break;;
 
@@ -139,11 +141,33 @@ ln $ln_opt $HOME/.picomputer/config/polybar $HOME/.config/polybar/config
 ln $ln_opt $HOME/.picomputer/config/i3 $HOME/.config/i3/config
 ln $ln_opt $HOME/.picomputer/config/dunstrc $HOME/.config/dunst/dunstrc
 ln $ln_opt $HOME/.picomputer/config/rofi $HOME/.config/rofi/config.rasi
-ln $ln_opt $HOME/.picomputer/config/qtheme.rasi $HOME/.config/rofi/qtheme.rasi
+ln $ln_opt $HOME/.picomputer/config/picomputer.rasi $HOME/.config/rofi/picomputer.rasi
 ln $ln_opt $HOME/.picomputer/config/vimrc $HOME/.vimrc
+xrdb $HOME/.Xresources
 
 }
 
+installfonts() {
+
+while true; do
+   read -p $':: Install fonts for piComputer?\n\n→ Continue? [Y/n]' yn
+   case $yn in
+
+[Yy]* )
+echo -e "\n:: Copying fonts to $HOME/.fonts...";
+mkdir -p $HOME/.fonts
+cp -r $INSTALL_DIR/fonts/JetBrainsMono $HOME/.fonts/
+fc-list | grep JetBrains
+echo -e "\n Fonts installed in $HOME/.fonts";
+break;;
+
+[Nn]* )
+   break;;
+
+* )
+   esac
+done
+}
 
 installconfig() {
 while true; do
@@ -157,6 +181,7 @@ while true; do
 echo -e "\n:: Running...";
 setupdirs
 linkconfigfiles
+installfonts
 echo -e "\n:: Installation complete. Do you want to remove installation folder? [Y/n]"
 sudo rm -rI $INSTALL_DIR
 echo -e "\n\n:: Done. All configuration files are here: $HOME/.picomputer"

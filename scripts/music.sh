@@ -7,11 +7,11 @@ artist=$(mocp -Q %artist)
 song=$(mocp -Q %song)
  
 if [ $state = 'PLAY' ]; then
-   state_icon=""
+   state_icon="▷"
 elif [ $state = 'PAUSE' ]; then
-   state_icon=""
+   state_icon="◫"
 else
-   state_icon=""
+   state_icon="□"
 fi
 
 if [ "$artist" ] && [ "$song" ]; then
