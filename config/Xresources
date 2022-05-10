@@ -13,10 +13,10 @@ Xcursor.size: 32
 URxvt*geometry:                       92x24
 URxvt*loginShell:                     true
 URxvt*skipScroll:                     true
-URxvt.url-launcher:                   luakit
 URxvt*scrollBar:                      false
 URxvt*intensityStyles:                false
 
+URxvt.perl-ext-common: default,keyboard-select,font-size
 
 URxvt.keysym.Control-Up:         \033[1;5A
 URxvt.keysym.Control-Down:       \033[1;5B
@@ -25,31 +25,42 @@ URxvt.keysym.Control-Right:      \033[1;5C
 
 
 ! copy / paste
-URxvt.iso14755: false
-URxvt.iso14755_52: false
+! Disable ISO 14755 unicode input so we can use Ctrl-Shift bindings
+URxvt.iso14755:        false
+URxvt.iso14755_52:     false
+! Ctrl-Shift-c & Ctrl-Shift-v to copy and paste
+URxvt.keysym.C-S-0x43: eval:selection_to_clipboard
+URxvt.keysym.C-S-0x56: eval:paste_clipboard
+
+! keyboard selection mode (alt+Esc)
+! perl extension in ~/.urxvt/ext
+URxvt.keysym.M-Escape: perl:keyboard-select:activate
+URxvt.keyboard-select.clipboard: true
 
 ! theme
 ! Black Red Yellow Green Blue Magenta Cyan White
 ! 0     1   2      3     4    5       6    7
 
+URxvt.internalBorder:                 12
+
 URxvt*background:                     #232323
 URxvt*foreground:                     #eeeeee
 
-URxvt*color0:                         #6c6c6c
-URxvt*color1:                         #ad2e24
+URxvt*color0:                         #424242
+URxvt*color1:                         #d02522
 URxvt*color2:                         #ff8700
-URxvt*color3:                         #37795e
-URxvt*color4:                         #2364aa
-URxvt*color5:                         #b7245c
+URxvt*color3:                         #5bb95d
+URxvt*color4:                         #2b58d0
+URxvt*color5:                         #ee4487
 URxvt*color6:                         #35bba8
 URxvt*color7:                         #eeeeee
 
-URxvt*color8:                         #6c6c6c
-URxvt*color9:                         #ad2e24
+URxvt*color8:                         #424242
+URxvt*color9:                         #d02522
 URxvt*color10:                        #ff8700
-URxvt*color11:                        #37795e
-URxvt*color12:                        #2364aa
-URxvt*color13:                        #b7245c
+URxvt*color11:                        #5bb95d
+URxvt*color12:                        #2b58d0
+URxvt*color13:                        #ee4487
 URxvt*color14:                        #35bba8
 URxvt*color15:                        #eeeeee
 
