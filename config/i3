@@ -10,9 +10,10 @@
 #  |  _|_|_____|___|_|_|_|  _|___|_| |___|_|  
 #  |_|                   |_|                  
 
-# Set mod keys
+# Set mod keys & scripts path
 set $mod Mod4
 set $alt Mod1
+set $scriptsDir ~/.picomputer/scripts
 
 # Font for window titles
 font pango:JetBrains Mono Bold 11
@@ -27,7 +28,7 @@ popup_during_fullscreen smart
 
 # Colors
 
-# class                 border   backgr. text    indicator child_border
+# class                 border  backgr. text    indicator child_border
 client.focused          #303030 #303030 #ffffff #ff8700 #303030
 client.focused_inactive #232323 #232323 #888888 #232323 #232323
 client.unfocused        #232323 #232323 #888888 #232323 #232323
@@ -36,10 +37,11 @@ client.placeholder      #0c0c0c #0c0c0c #ffffff #000000 #0c0c0c
 
 client.background       #232323
 
-# xss-lock will use i3lock to lock the screen before suspend. 
-# Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.picomputer/scripts/lockscreen.sh
-bindsym $mod+shift+Escape exec ~/.picomputer/scripts/lockscreen.sh
+# xset s <lock> <blank> (in seconds)
+# xss-lock will use i3lock to lock the screen
+exec xset s 600 600
+exec --no-startup-id xss-lock -- $scriptsDir/lockscreen.sh
+bindsym $mod+shift+Escape exec $scriptsDir/lockscreen.sh
 
 
 # Scratchpad
@@ -47,14 +49,12 @@ bindsym $mod+shift+m scratchpad show
 bindsym $mod+m move scratchpad
 
 # Volume
-set $volScript ~/.picomputer/scripts/volume.sh
+set $volScript $scriptsDir/volume.sh
 bindsym XF86AudioRaiseVolume exec --no-startup-id $volScript 10%+ 
 bindsym XF86AudioLowerVolume exec --no-startup-id $volScript 10%- 
 bindsym shift+XF86AudioRaiseVolume exec --no-startup-id $volScript 1%+ 
 bindsym shift+XF86AudioLowerVolume exec --no-startup-id $volScript 1%- 
 bindsym XF86AudioMute exec --no-startup-id $volScript toggle
-
-bindsym XF86AudioMicMute exec amixer set Capture toggle
 
 # Screenshot scrot
 set $notif_screen dunstify -t 1500 -i cs-screen "Screenshot!" 
@@ -63,10 +63,10 @@ bindsym --release $mod+shift+p exec --no-startup-id $screenshot -s && $notif_scr
 bindsym $mod+p exec --no-startup-id $screenshot && $notif_screen
 
 # dunst / notifications
-bindsym $mod+$shift+n exec dunstctl close-all
+bindsym $mod+shift+n exec dunstctl close-all
 
 # toggle screen
-bindsym $mod+shift+s exec ~/.picomputer/scripts/toggle_screen.py
+bindsym $mod+shift+s exec $scriptsDir/toggle_screen.py
 
 # Use Mouse+$mod to drag floating windows
 floating_modifier $mod
@@ -78,14 +78,14 @@ for_window [window_role="About"] floating enable
 for_window [window_role="pop-up"] floating enable
 
 # shutdown popup
-bindsym $mod+Escape exec urxvt -e ~/.picomputer/scripts/poweroff.sh
+bindsym $mod+Escape exec urxvt -e $scriptsDir/poweroff.sh
 
 # start a terminal
 bindsym $mod+Return exec urxvt
 
 # start apps
 bindsym $mod+n exec exec urxvt -e ranger &
-bindsym $mod+Shift+w exec urxvt -e ~/.picomputer/scripts/wifictl.sh &
+bindsym $mod+Shift+w exec urxvt -e $scriptsDir/wifictl.sh &
 
 # kill focused window
 bindsym $mod+q kill
@@ -98,7 +98,7 @@ bindsym $mod+$alt+q [con_id="__focused__"] exec --no-startup-id kill -9 $(xdotoo
 # theme: ~/.config/rofi/config.rasi
 bindsym $mod+space exec --no-startup-id rofi -show drun 
 bindsym $mod+Tab exec --no-startup-id rofi -show window
-bindsym $mod+b exec --no-startup-id rofi-bluetooth
+bindsym $mod+b exec --no-startup-id $scriptsDir/rofi-bluetooth
 
 
 #
@@ -245,16 +245,16 @@ bindsym $mod+r mode "↘"
 
 
 # xrandr
-exec_always --no-startup-id ~/.picomputer/scripts/xrandr.sh
+exec_always --no-startup-id $scriptsDir/xrandr.sh
 
 # Polybar
-exec_always --no-startup-id ~/.picomputer/scripts/polybar.sh
+exec_always --no-startup-id $scriptsDir/polybar.sh
 
 # Background
 exec_always --no-startup-id feh --bg-scale ~/.picomputer/images/background.png
 
 # Hide mouse cursor
-exec_always --no-startup-id unclutter -b --timeout 2
+exec_always --no-startup-id $scriptsDir/xbanish &
 
 # Start Apps 
-exec_always --no-startup-id urxvt -e tty-clock -cs -C 2
+# exec_always --no-startup-id urxvt -e tty-clock -cs -C 2
