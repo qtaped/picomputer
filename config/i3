@@ -39,8 +39,9 @@ client.background       #232323
 
 # xset s <lock> <blank> (in seconds)
 # xss-lock will use i3lock to lock the screen
-exec xset s 600 600
-exec --no-startup-id xss-lock -- $scriptsDir/lockscreen.sh
+exec xset s 300 600
+#exec --no-startup-id xss-lock -- $scriptsDir/lockscreen.sh
+exec --no-startup-id xss-lock -- urxvt -e $scriptsDir/sleepscreen.py
 bindsym $mod+shift+Escape exec $scriptsDir/lockscreen.sh
 
 
