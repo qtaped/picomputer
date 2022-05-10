@@ -4,6 +4,6 @@
 
 pkill -u "$USER" -USR1 dunst
 
-i3lock -i $HOME/.dotfiles/images/background.png --nofork
+i3lock -e -i $HOME/.picomputer/images/background.png --nofork
 
 pkill -u "$USER" -USR2 dunst
