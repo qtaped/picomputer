@@ -66,7 +66,7 @@ while true; do
 
 [Yy]* )
 echo -e "\n:: Running apt...";
-sudo apt install vim xserver-xorg i3 polybar dunst rofi scrot feh xss-lock pulseaudio unclutter xdotool moc ranger tty-clock python3-pip
+sudo apt install vim xserver-xorg i3 polybar dunst rofi scrot feh xss-lock pulseaudio pulseaudio-module-bluetooth xdotool xclip moc ranger tty-clock python3-pip
 echo -e "\n:: Installing adafruit_ads1x15 for battery monitoring...";
 sudo pip3 install adafruit_ads1x15
 msg="Packages have been installed."
