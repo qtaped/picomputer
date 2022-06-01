@@ -40,12 +40,15 @@ The script will basically run apt to install some packages (_zsh, vim, xorg-serv
 Some tweaks are needed in order to rotate the screen and get the right resolution with graphic acceleration. In both console and graphical mode.  
 A GPIO Default State is changed, this allows you to turn on/off the screen by controlling output2 on retroPSU, and always keep it on if piComputer restart.  
 Files concerned are in _system_ folder.  
-> **At this time, the install script DOES NOT copy those files, you have to do it manually**
-
+> **At this time, the install script DOES NOT copy those files, you have to do it manually**  
+e.g.  
 ```
 sudo cp $HOME/.picomputer/system/00-picomputer.conf /usr/share/X11/xorg.conf.d/
-sudo cp $HOME/.picomputer/system/cmdline.txt /boot/
+
+add fbcon=rotate:3 to file: /boot/cmdline.txt (see example)
+
 sudo cp $HOME/.picomputer/system/config.txt /boot/
+
 reboot
 ```
 
