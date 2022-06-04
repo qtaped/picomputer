@@ -21,7 +21,8 @@ I am a graphic designer, not an engineer neither a developer. You have been warn
 <img src="images/piComputer_screenshot.png" width="100%">
 
 The interface is based on [i3](https://i3wm.org/) + [polybar](https://github.com/polybar/polybar).  
-Press _Win + Return_ to open a terminal. Shortcuts list coming soon (check i3 config file meanwhile).
+Press _Win + Return_ to open a terminal.  
+[Shortcuts list available on the wiki.](https://github.com/qtaped/picomputer/wiki/shortcuts)
 
 ### Installation
 Install a minimal ~~raspian~~ [Raspberry Pi OS](https://www.raspberrypi.com/software/) on your pi, then clone (or [download](https://github.com/qtaped/picomputer/archive/refs/heads/main.zip)) and run the install bash script.
