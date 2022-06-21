@@ -68,6 +68,13 @@ bindsym $mod+shift+n exec dunstctl close-all
 # toggle screen
 bindsym $mod+shift+s exec $scriptsDir/toggle_screen.py
 
+### lock mode
+mode "⊗"{
+bindsym $mod+$alt+Escape mode "default";exec --no-startup-id $scriptsDir/lockmode.sh off
+}
+
+bindsym $mod+$alt+Escape mode "⊗";exec --no-startup-id $scriptsDir/lockmode.sh on
+
 # Use Mouse+$mod to drag floating windows
 floating_modifier $mod
 focus_follows_mouse no
