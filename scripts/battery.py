@@ -36,4 +36,7 @@ elif 0 < level < 5:
 else:
   bar= '▲'
 
-print("{0} BAT[{1}%]".format(bar,level))
+if level < 5:
+  print("%{B#FF8700}%{F#232323}","{0} BAT[{1}%]".format(bar,level),"%{B-}%{F-}")
+else:
+  print("{0} BAT[{1}%]".format(bar,level))
