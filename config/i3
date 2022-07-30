@@ -1,7 +1,7 @@
 #   _   ____  
 #  (_) |___ \ 
 #   _    __) |
-#  | |  |__ <   # i3 piComputer config file (v0)
+#  | |  |__ <   # i3 piComputer config file
 #  | |  ___) |  #
 #  |_| |____/   # https://i3wm.org/docs/userguide.html
 #       _ _____                   _           
@@ -198,13 +198,19 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# reload the configuration file
-#bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit' --font 'pango:JetBrains Mono Regular 12'"
 
+# exit i3 (logs you out of your X session)
+mode "[l]ogout, [r]eboot, [s]hutdown" {
+  bindsym l exec i3-msg exit
+  bindsym r exec systemctl reboot
+  bindsym s exec systemctl poweroff
+  bindsym Escape mode "default"
+  bindsym Return mode "default"
+}
+
+bindsym $mod+Shift+e mode "[l]ogout, [r]eboot, [s]hutdown"
 
 # resize window (you can also use the mouse for that)
 
@@ -241,9 +247,8 @@ mode "↘"{
         bindsym shift+Up resize shrink height 20 px or 20 ppt
         bindsym shift+Right resize grow width 20 px or 20 ppt
 
-        # back to normal: Enter or Escape or $mod+r
+        # back to normal: Enter, Escape or $mod+r
         bindsym Return mode "default"
-        bindsym Space mode "default"
         bindsym Escape mode "default"
         bindsym $mod+r mode "default"
 }
