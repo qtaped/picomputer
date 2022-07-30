@@ -18,7 +18,7 @@
     follow = none
 
     # Geometry
-    geometry = "252x5+0-0"
+    geometry = "252x5-8-0"
     corner_radius = 0
 
     # Turn on the progess bar
@@ -43,7 +43,7 @@
     # Draw a line of "separator_height" pixel height between two
     # notifications.
     # Set to 0 to disable.
-    separator_height = 0
+    separator_height = 1
 
     # Padding between text and separator.
     padding = 8
@@ -59,7 +59,7 @@
     frame_width = 1
 
     # Defines color of the frame around the notification window.
-    frame_color = "#232323"
+    frame_color = "#ff8700"
 
     # Define a color for the separator.
     # possible values are:
@@ -184,7 +184,7 @@
     ### Misc/Advanced ###
 
     # dmenu path.
-    dmenu = /usr/bin/rofi -show drun -drun-display-format {name} -theme /home/qntn/.config/rofi/qtheme.rasi
+    dmenu = /usr/bin/rofi -show drun -drun-display-format {name} -theme ~/.picomputer/config/picomputer.rasi
 
 
     # Browser for opening urls in context menu.
@@ -283,20 +283,21 @@
     # Otherwise the "#" and following would be interpreted as a comment.
     background = "#232323"
     foreground = "#6c6c6c"
-    timeout = 3
+    frame_color = "#6c6c6c"
+    timeout = 8
     # Icon for notifications with low urgency, uncomment to enable
     #icon = /path/to/icon
 
 [urgency_normal]
     background = "#232323"
     foreground = "#ff8700"
-    timeout = 6
+    timeout = 12
     # Icon for notifications with normal urgency, uncomment to enable
     #icon = /path/to/icon
 
 [urgency_critical]
-    background = "#232323"
-    foreground = "#ff8700"
+    foreground = "#232323"
+    background = "#ff8700"
     frame_color = "#ff8700"
     timeout = 0
     # Icon for notifications with critical urgency, uncomment to enable
