@@ -3,9 +3,8 @@
 # apt install python3-pip
 # pip3 install adafruit_ads1x15
 
-import time
-import datetime
 import Adafruit_ADS1x15
+import subprocess
 
 adc = Adafruit_ADS1x15.ADS1015()
 
@@ -31,7 +30,9 @@ elif level > 20:
   bar= '▪▫▫▫'
 elif level > 5:
   bar= '▫▫▫▫'
-elif 0 < level < 5:
+elif 1 < level < 5:
+  notification = 'dunstify -u critical -h string:x-dunst-stack-tag:lowbattery "Low battery" "Plug to AC or shutdown."'
+  subprocess.call(notification, shell=True)
   bar= '△'
 else:
   bar= '▲'
@@ -40,3 +41,8 @@ if level < 5:
   print("%{B#FF8700}%{F#232323}","{0} BAT[{1}%]".format(bar,level),"%{B-}%{F-}")
 else:
   print("{0} BAT[{1}%]".format(bar,level))
+
+if level < 1:
+  shutdown = 'dunstify -u critical -h string:x-dunst-stack-tag:lowbattery "Low battery" "piComputer will shutdown at $(date --date "now + 30 seconds" "+%H:%M:%S")" && sleep 30 && shutdown -h now'
+  subprocess.call(shutdown, shell=True)
+  print("SHTDWN.")
