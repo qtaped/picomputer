@@ -40,8 +40,7 @@ client.background       #232323
 # xset s <lock> <blank> (in seconds)
 # xss-lock will use i3lock to lock the screen
 exec xset s 300 600
-#exec --no-startup-id xss-lock -- $scriptsDir/lockscreen.sh
-exec --no-startup-id xss-lock -- urxvt -e $scriptsDir/sleepscreen.py
+exec --no-startup-id xss-lock -- $scriptsDir/lockscreen.sh
 bindsym $mod+shift+Escape exec $scriptsDir/lockscreen.sh
 
 
@@ -65,8 +64,8 @@ bindsym $mod+p exec --no-startup-id $screenshot && $notif_screen
 # dunst / notifications
 bindsym $mod+shift+n exec dunstctl close-all
 
-# toggle screen
-bindsym $mod+shift+s exec $scriptsDir/toggle_screen.py
+# sleep screen
+bindsym $mod+shift+s exec $scriptsDir/sleepscreen.py
 
 ### lock mode
 mode "⊗"{
@@ -258,6 +257,9 @@ bindsym $mod+r mode "↘"
 
 # xrandr
 exec_always --no-startup-id $scriptsDir/xrandr.sh
+
+# Xmodmap
+exec_always --no-startup-id xmodmap ~/.Xmodmap
 
 # Polybar
 exec_always --no-startup-id $scriptsDir/polybar.sh
