@@ -119,48 +119,29 @@ interval=3
 
 [module/memory]
 type = internal/memory
-interval = 3
+interval = 5
 format = <label>
 label = %mb_free% free
 format-padding = 1
 format-font = 3
 format-foreground = ${colors.dark}
 
-[module/bluetooth]
-type = custom/script
-exec = ~/.picomputer/scripts/bluetooth.sh
-tail = true
-click-left = ~/.picomputer/scripts/bluetooth.sh --toggle
-click-middle = urxvt -e ~/.sh/bluetooth.sh
-label-font = 3
-format-padding = 1
-
 [module/pibattery]
 type = custom/script
-label = %output%
 exec = ~/.picomputer/scripts/battery.py
-interval = 60
+tail = true
 format-padding = 1
-
-[module/uptime]
-type = custom/script
-exec = ~/.picomputer/scripts/uptime.sh
-interval = 300
-format-padding = 1
-format-font = 3
-format-foreground = ${colors.dark}
-
 
 [module/wlan]
 type = internal/network
 interface = wlan0
-interval = 3
+interval = 10
 
-format-connected =%{A2:urxvt -e ~/.picomputer/scripts/wifictl.sh &:}<ramp-signal> <label-connected>%{A}
+format-connected =<ramp-signal> <label-connected>
 format-connected-padding = 1
 label-connected = %essid:0:12:...%
 
-format-disconnected = %{A2:urxvt -e ~/.picomputer/scripts/wifictl.sh &:} %{A}
+format-disconnected = ✕ NO WIFI
 format-disconnected-padding = 1
 
 ramp-signal-0 = ◦◦◦◦
@@ -171,7 +152,7 @@ ramp-signal-4 = ••••
 
 [module/time]
 type = internal/date
-interval = 5
+interval = 60
 format-margin = 0
 
 time = "%H:%M"
