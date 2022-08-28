@@ -95,8 +95,25 @@ echo "  Done."
 
 if [ -d "$HOME/.picomputer" ];
 then
+
+while true; do
+   read -p $'\n:: piComputer configuration found. Backup? [Y/n]' yn
+   case $yn in
+
+[Yy]* )
+mv -i $HOME/.picomputer $HOME/.picomputer-backup
+echo -e "\n  piComputer configuration backup: $HOME/.picomputer-backup"
+break;;
+
+[Nn]* )
 echo -e "\n:: piComputer configuration found. Remove? [Y/n]"
 rm -rI $HOME/.picomputer
+break;;
+
+* )
+   esac
+done
+
 else
 echo -e "\n:: No existing piComputer configuration found."
 fi
