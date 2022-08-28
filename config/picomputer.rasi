@@ -2,7 +2,7 @@
 /* piComputer rofi theme               */
 
 * {
-   font: "JetBrains Mono Regular 20";
+   font: "JetBrains Mono Regular 16";
 
    orange:           #ff8700;
    red:              #ad2e24;
@@ -21,37 +21,39 @@
 }
 
 window {
+   location: north;
+   anchor:north;
+   y-offset: 48px;
    background-color: @background-color;
-   padding: 32px 0 42px 320px;
-   fullscreen: true;
+   fullscreen: false;
+   width:800px;
+   padding: 24px;
+   border: 1px;
    border-radius: 0;
    border-color: @border-color;
 }
 
-mainbox {
-   background-color: transparent;
-   spacing:12px;
-}
-
-message {
-   padding: 12px 20px;
-   background-color: transparent;
-}
-
-textbox {
-   text-color: @text-color;
-   background-color:transparent;
-}
-
 listview {
-   fixed-height: true;
-   dynamic: false;
+   fixed-height: false;
+   dynamic: true;
+   lines:7;
    scrollbar: false;
-   spacing: 12px;
+   spacing: 8px;
    padding: 1px 0px 0px 10px;
    margin: 0px 0px 1px 0px;
    background-color: transparent;
 }
+
+mainbox {
+}
+
+message {
+}
+
+textbox {
+   text-color: @text-color;
+}
+
 
 element {
    padding: 4px 10px;
