@@ -2,7 +2,7 @@
 #  (_) |___ \ 
 #   _    __) |
 #  | |  |__ <   # i3 piComputer config file
-#  | |  ___) |  #
+#  | |  ___) |  # https://github.com/qtaped/picomputer
 #  |_| |____/   # https://i3wm.org/docs/userguide.html
 #       _ _____                   _           
 #   ___|_|     |___ _____ ___ _ _| |_ ___ ___ 
@@ -39,7 +39,7 @@ client.background       #232323
 
 # xset s <lock> <blank> (in seconds)
 # xss-lock will use i3lock to lock the screen
-exec xset s 300 600
+exec --no-startup-id $scriptsDir/powermenu.sh --xset
 exec --no-startup-id xss-lock -- $scriptsDir/lockscreen.sh
 bindsym $mod+shift+Escape exec $scriptsDir/lockscreen.sh
 
@@ -56,7 +56,7 @@ bindsym shift+XF86AudioLowerVolume exec --no-startup-id $scriptsDir/volume.sh 1%
 bindsym XF86AudioMute exec --no-startup-id $scriptsDir/volume.sh toggle
 
 # Screenshot scrot
-set $notif_screen dunstify -t 1500 -i cs-screen "Screenshot!" 
+set $notif_screen dunstify -t 1500 "Screenshot!" 
 set $screenshot scrot ~/images/screenshot_%F_%H%M%S.png
 bindsym --release $mod+shift+p exec --no-startup-id $screenshot -s && $notif_screen
 bindsym $mod+p exec --no-startup-id $screenshot && $notif_screen
@@ -68,11 +68,11 @@ bindsym $mod+shift+n exec dunstctl close-all
 bindsym $mod+shift+s exec $scriptsDir/sleepscreen.py
 
 ### lock mode
-mode "⊗"{
+mode "LOCKED ⊗"{
 bindsym $mod+$alt+Escape mode "default";exec --no-startup-id $scriptsDir/lockmode.sh off
 }
 
-bindsym $mod+$alt+Escape mode "⊗";exec --no-startup-id $scriptsDir/lockmode.sh on
+bindsym $mod+$alt+Escape mode "LOCKED ⊗";exec --no-startup-id $scriptsDir/lockmode.sh on
 
 # Use Mouse+$mod to drag floating windows
 floating_modifier $mod
@@ -82,9 +82,6 @@ focus_follows_mouse no
 floating_maximum_size 1440 x 360
 for_window [window_role="About"] floating enable
 for_window [window_role="pop-up"] floating enable
-
-# shutdown popup
-bindsym $mod+Escape exec urxvt -e $scriptsDir/poweroff.sh
 
 # start a terminal
 bindsym $mod+Return exec urxvt
@@ -200,20 +197,28 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 
-# exit i3 (logs you out of your X session)
-mode "[l]ogout, [r]eboot, [s]hutdown" {
-  bindsym l exec i3-msg exit
+# powermenu
+bindsym $mod+Escape mode "POWER MENU ◨";exec $scriptsDir/powermenu.sh --menu
+set $rm_notif_pm $(dunstify -t 1 -h string:x-dunst-stack-tag:powermenu "...")
+
+mode "POWER MENU ◨" {
+  bindsym x exec $scriptsDir/powermenu.sh --toggle;
+  bindsym s exec $scriptsDir/sleepscreen.py;exec $rm_notif_pm; mode"default"
+  bindsym l exec $scriptsDir/lockscreen.sh;exec $rm_notif_pm; mode"default"
+  bindsym e exec i3-msg exit
   bindsym r exec systemctl reboot
-  bindsym s exec systemctl poweroff
-  bindsym Escape mode "default"
-  bindsym Return mode "default"
+  bindsym p exec systemctl poweroff
+
+  bindsym q mode "default";exec $rm_notif_pm
+  bindsym Escape mode "default";exec $rm_notif_pm
+  bindsym Return mode "default";exec $rm_notif_pm
+  bindsym $mod+Escape mode "default";exec $rm_notif_pm
 }
 
-bindsym $mod+Shift+e mode "[l]ogout, [r]eboot, [s]hutdown"
 
 # resize window (you can also use the mouse for that)
 
-mode "↘"{
+mode "RESIZE ↘"{
 
 # These bindings trigger as soon as you enter the resize mode
      
@@ -252,7 +257,7 @@ mode "↘"{
         bindsym $mod+r mode "default"
 }
 
-bindsym $mod+r mode "↘"
+bindsym $mod+r mode "RESIZE ↘"
 
 
 # xrandr
