@@ -26,6 +26,8 @@ arm_64bit=1
 # (e.g. for USB device mode) or if USB support is not required.
 otg_mode=1
 
+[all]
+
 [picomputer]
 
 # toggle display power on
@@ -35,7 +37,9 @@ hdmi_group=2
 hdmi_mode=87
 hdmi_drive=2
 hdmi_force_mode=1
-hdmi_timings=480 0 30 30 30 1920 0 6 6 6 0 0 0 59 0 55000000 8
+hdmi_timings=480 0 30 30 30 1920 0 6 6 6 0 0 0 60 0 66000000 7
+#hdmi_timings=480 1 48 32 80 1920 0 3 10 56 0 0 0 60 0 75840000 3
+#hdmi_timings=480 0 30 30 30 1920 0 6 6 6 0 0 0 59 0 55000000 8
 max_framebuffer_width=1920
 max_framebuffer_height=1920
 framebuffer_width=480
