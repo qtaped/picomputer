@@ -1,5 +1,12 @@
 # piComputer Change Log
 
+## 0.9.0.1
+### 2022-09-27
+
+- **modified:   config/Xresources** : changed fontsize to size
+- **modified:   scripts/battery.py** : cleaner way to display battery bar, refresh to 10 seconds
+- **modified:   version** : 0.9.0.1
+
 ## 0.9
 ### 2022-08-22
 
