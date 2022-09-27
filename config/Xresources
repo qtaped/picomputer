@@ -67,7 +67,7 @@ URxvt*color15:                        #eeeeee
 URxvt*cursorBlink:                    true
 URxvt*cursorColor:                    #ff8700
 
-URxvt*font:              xft:JetBrainsMono:pixelsize=21
-URxvt*boldFont:          xft:JetBrainsMono:bold:pixelsize=21
-URxvt*italicFont:        xft:JetBrainsMono:italic:pixelsize=21
-URxvt*boldItalicFont:    xft:JetBrainsMono:bolditalic:pixelsize=21
+URxvt*font:              xft:JetBrainsMono:size=11
+URxvt*boldFont:          xft:JetBrainsMono:bold:size=11
+URxvt*italicFont:        xft:JetBrainsMono:italic:size=11
+URxvt*boldItalicFont:    xft:JetBrainsMono:bolditalic:size=11
