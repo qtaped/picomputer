@@ -17,7 +17,7 @@ import time
 # 2047 - 1599 = 448
 # 448/4.48 = 100 (~ percentage)
 
-refresh = 5 #refresh battery status every x seconds
+refresh = 10 #refresh battery status every x seconds
 
 while True:
 
@@ -38,23 +38,16 @@ while True:
     shutdown_sched = 1
 
   if adc1 < 1024: # picomputer is not plugged to AC
-    if level > 80:
-      bar= '▪▪▪▪'
-    elif level > 60:
-      bar= '▪▪▪▫'
-    elif level > 40:
-      bar= '▪▪▫▫'
-    elif level > 20:
-      bar= '▪▫▫▫'
-    elif level > 5:
-      bar= '▫▫▫▫'
-    elif level < 5:
-      bar= '△'
-    else:
-      bar= 'ERROR.'
+    barWidth, icOn, icOff = 4, '▪', '▫'
+
+    nicOn = round((level+5) / 100 * barWidth)
+    if nicOn < 0:nicOn = 0
+    nicOff = barWidth - nicOn
+    
+    bar = icOn*nicOn + icOff*nicOff # ▪▪▫▫
   
     if shutdown_sched == 1:
-      bar= 'SHTDWN.'
+      bar = '△ SHTDWN.'
       with open(sched_file) as f:
           usec_shutdown = int(f.readline().rstrip().split("=")[1]) / 1000000
 
@@ -80,3 +73,4 @@ while True:
     print("(AC) BAT[{0}%]".format(level), flush=True)
 
   time.sleep(refresh)
+
