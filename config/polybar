@@ -131,24 +131,26 @@ type = custom/script
 exec = ~/.picomputer/scripts/battery.py
 tail = true
 format-padding = 1
+label-minlen = 13
 
 [module/wlan]
 type = internal/network
 interface = wlan0
 interval = 10
 
-format-connected =<ramp-signal> <label-connected>
+format-connected = <ramp-signal> <label-connected>
 format-connected-padding = 1
-label-connected = %essid:0:12:...%
-
-format-disconnected = ✕ NO WIFI
+label-connected = %essid:0:8:.%
+label-connected-minlen = 9 
+format-disconnected =  <label-disconnected>
+label-disconnected = ✕ WIFI OFF
+label-disconnected-minlen =  11
 format-disconnected-padding = 1
 
-ramp-signal-0 = ◦◦◦◦
-ramp-signal-1 = •◦◦◦
-ramp-signal-2 = ••◦◦
-ramp-signal-3 = •••◦
-ramp-signal-4 = ••••
+ramp-signal-0 = ◌
+ramp-signal-1 = ◯
+ramp-signal-2 = ◎
+ramp-signal-3 = ●
 
 [module/time]
 type = internal/date
@@ -165,20 +167,32 @@ label-padding = 1
 type = internal/pulseaudio
 
 format-volume-margin = 0
-format-volume = <ramp-volume> <label-volume>
-label-volume = VOL[%percentage%%]
+format-volume = <ramp-volume> vol.<label-volume>
+label-volume = %percentage%
+label-volume-minlen = 4
 format-volume-alignment = center
 format-volume-padding = 1
 use-ui-max = false
 interval = 0
 
-ramp-volume-0 = ▵▵▵▵
-ramp-volume-1 = ▴▵▵▵
-ramp-volume-2 = ▴▴▵▵
-ramp-volume-3 = ▴▴▴▵
-ramp-volume-4 = ▴▴▴▴
+ramp-volume-0 =  ■────
+ramp-volume-1 =  ─■───
+ramp-volume-2 =  ──■──
+ramp-volume-3 =  ───■─
+ramp-volume-4 =  ────■
 
-format-muted = ✕ VOL[MUTE]
+;ramp-volume-0 =  ▁  
+;ramp-volume-1 =  ▂  
+;ramp-volume-2 =  ▃ 
+;ramp-volume-3 =  ▄
+;ramp-volume-4 =  ▅
+;ramp-volume-5 =  ▆
+;ramp-volume-6 =  ▇
+;ramp-volume-7 =  █
+
+format-muted = <label-muted>
+label-muted = ───── vol.MUTE
+label-muted-minlen = 11
 format-muted-padding = 1
 format-muted-foreground = ${colors.background}
 format-muted-background = ${colors.orange}
