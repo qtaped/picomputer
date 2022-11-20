@@ -1,5 +1,14 @@
 # piComputer Change Log
 
+## 0.9.0.2
+### 2022-11-20
+
+- **modified:   config/polybar** : esthetics changes, fixed lenght
+- **modified:   scripts/battery.py** : 2 minutes shutdown warning, cancel shutdown if level > warn_level
+- **modified:   scripts/sleepscreen.py** : capslock led turn on if screen turn off, et vice et versa.
+- **modified:   version** : 0.9.0.2
+
+
 ## 0.9.0.1
 ### 2022-09-27
 
@@ -26,3 +35,4 @@
 - **modified:   scripts/wifictl.sh** : corrections, ifconfig up/down, edit wpa
 - **modified:   system/config.txt** : cleaner version
 - **modified:   version** : 0.9
+
