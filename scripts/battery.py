@@ -18,59 +18,67 @@ import time
 # 448/4.48 = 100 (~ percentage)
 
 refresh = 10 #refresh battery status every x seconds
+shutdown_level = 1 # shutdown piComputer at x%
+warning_level = 5
+
+barWidth, icOn, icOff, warn, plug = 5, '■', '┄', '△', '⚡'
+
+def cancelShutdown():
+    subprocess.call('shutdown -c --no-wall', shell=True)
+    notification = f'dunstify -t 1500 -h {dunstTag} "AC PLUG" "Shutdown canceled."'
+    subprocess.call(notification, shell=True)
 
 while True:
+    adc = Adafruit_ADS1x15.ADS1015()
+    adc0 = adc.read_adc(0, gain=1) # battery value
+    adc1 = adc.read_adc(1) # is it plug to AC?
+    level = round((adc0-1599)/4.48) # battery percentage
 
-  adc = Adafruit_ADS1x15.ADS1015()
-  adc0 = adc.read_adc(0, gain=1) # battery value
-  adc1 = adc.read_adc(1) # is it plug to AC?
-  level = round((adc0-1599)/4.48, 1) # battery percentage
+    dunstTag = 'string:x-dunst-stack-tag:battery'
 
-  dunstTag = 'string:x-dunst-stack-tag:lowbattery'
+    # is a shutdown is scheduled? with no-wall option?
+    sched_file = '/run/systemd/shutdown/scheduled'
+    shutdown_sched = 0
+    if os.path.isfile(sched_file):
+        with open(sched_file) as f:
+            warn_wall = int(f.readlines()[1].rstrip().split("=")[1])
+    if os.path.isfile(sched_file) and warn_wall == 0:
+        shutdown_sched = 1
 
-  # is a shutdown is scheduled? with no-wall option?
-  sched_file = '/run/systemd/shutdown/scheduled'
-  shutdown_sched = 0
-  if os.path.isfile(sched_file):
-    with open(sched_file) as f:
-        warn_wall = int(f.readlines()[1].rstrip().split("=")[1])
-  if os.path.isfile(sched_file) and warn_wall == 0:
-    shutdown_sched = 1
+    if adc1 < 1024: # picomputer is not plugged to AC
+ 
+        nicOn = round((level + 5) / 100 * barWidth)
+        if nicOn < 0:nicOn = 0
+        nicOff = barWidth - nicOn
 
-  if adc1 < 1024: # picomputer is not plugged to AC
-    barWidth, icOn, icOff = 4, '▪', '▫'
+        bar = icOn*nicOn + icOff*nicOff
 
-    nicOn = round((level+5) / 100 * barWidth)
-    if nicOn < 0:nicOn = 0
-    nicOff = barWidth - nicOn
-    
-    bar = icOn*nicOn + icOff*nicOff # ▪▪▫▫
-  
-    if shutdown_sched == 1:
-      bar = '△ SHTDWN.'
-      with open(sched_file) as f:
-          usec_shutdown = int(f.readline().rstrip().split("=")[1]) / 1000000
+        if shutdown_sched == 1:
+          bar = (barWidth-1)*icOff+warn
+          with open(sched_file) as f:
+              usec_shutdown = int(f.readline().rstrip().split("=")[1]) / 1000000
 
-      current_time = time.time()
-      remain = round(usec_shutdown - current_time)
-      notification = f'dunstify -u critical -h {dunstTag} "Low battery" "piComputer will shutdown in <b>{remain}s</b> if you do not plug it."'
-      subprocess.call(notification, shell=True)
-    elif level < 1:
-        subprocess.call('shutdown -h --no-wall +1 2>/dev/null', shell=True)
-        notification = f'dunstify -u critical -h {dunstTag} "Low battery" "piComputer will shutdown in a minute if you do not plug it."'
-        subprocess.call(notification, shell=True)
+          current_time = time.time()
+          remain = round(usec_shutdown - current_time)
+          notification = f'dunstify -u critical -h {dunstTag} "Low battery" "piComputer will shutdown in <b>{remain}s</b> if you do not plug it."'
+          subprocess.call(notification, shell=True)
+        elif level < shutdown_level:
+            subprocess.call('shutdown -h --no-wall +2 2>/dev/null', shell=True)
+            notification = f'dunstify -u critical -h {dunstTag} "Low battery" "piComputer will shutdown in <b>2 minutes</b> if you do not plug it."'
+            subprocess.call(notification, shell=True)
 
-    if level < 5 or shutdown_sched == 1:
-      print("%{B#FF8700}%{F#232323}","{0} BAT[{1}%]".format(bar,level),"%{B-}%{F-}", flush=True)
-    else:
-      print("{0} BAT[{1}%]".format(bar,level), flush=True)
+        if level >= warning_level and shutdown_sched == 1:
+            cancelShutdown()
 
-  else: # picomputer is plugged to AC
-    if shutdown_sched == 1:
-      subprocess.call('shutdown -c --no-wall', shell=True)
-      notification = f'dunstify -t 1500 -h {dunstTag} "AC PLUG" "Shutdown canceled."'
-      subprocess.call(notification, shell=True)
-    print("(AC) BAT[{0}%]".format(level), flush=True)
+        if level < warning_level or shutdown_sched == 1:
+            print("%{B#FF8700}%{F#232323}","{0} bat.{1}".format(bar,level),"%{B-}%{F-}", flush=True)
+        else:
+            print("{0} bat.{1}".format(bar,level), flush=True)
 
-  time.sleep(refresh)
+    else: # picomputer is plugged to AC
+        if shutdown_sched == 1:
+            cancelShutdown()
+        print("{0} bat.{1}".format((barWidth-1)*icOff+plug,level), flush=True)
+
+    time.sleep(refresh)
 
