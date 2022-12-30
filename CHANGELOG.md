@@ -1,4 +1,16 @@
-# piComputer Change Log
+# piComputer CHANGELOG
+
+## 0.9.0.3
+### 2022-12-30
+
+- **modified:   config/Xresources** : add one-line scrolling in urxvt
+- **modified:   config/dunstrc** : cleaner
+- **modified:   config/i3** : do not lock after n seconds, small corrections
+- **modified:   config/polybar** : disable music module (too unstable)
+- **modified:   install.sh** : added xinit in packages installation
+- **modified:   scripts/battery.py** : fix messages
+- **modified:   version** : 0.9.0.3
+
 
 ## 0.9.0.2
 ### 2022-11-20

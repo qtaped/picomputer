@@ -158,19 +158,7 @@
 
     ### Icons ###
 
-    # Align icons left/right/off
     icon_position = off
-
-    # Scale small icons up to this size, set to 0 to disable. Helpful
-    # for e.g. small files or high-dpi screens. In case of conflict,
-    # max_icon_size takes precedence over this.
-    min_icon_size = 16
-
-    # Scale larger icons down to this size, set to 0 to disable
-    max_icon_size = 16
-
-    # Paths to default icons.
-#icon_path = /usr/share/icons/Papirus-Dark/48x48/mimetypes/:/usr/share/icons/Papirus-Dark/48x48/status/:/usr/share/icons/Papirus-Dark/48x48/apps/:/usr/share/icons/Papirus-Dark/48x48/devices/:/usr/share/icons/Papirus-Dark/48x48/actions/:/usr/share/icons/Papirus-Dark/48x48/emblems/:/usr/share/icons/Papirus-Dark/48x48/places/
 
     ### History ###
 
@@ -180,12 +168,6 @@
 
     # Maximum amount of notifications kept in history
     history_length = 20
-
-    ### Misc/Advanced ###
-
-    # dmenu path.
-    dmenu = /usr/bin/rofi -show drun -drun-display-format {name} -theme ~/.picomputer/config/picomputer.rasi
-
 
     # Browser for opening urls in context menu.
 
@@ -205,25 +187,9 @@
     ignore_dbusclose = true
 
     ### Wayland ###
-    # These settings are Wayland-specific. They have no effect when using X11
-
-    # Uncomment this if you want to let notications appear under fullscreen
-    # applications (default: overlay)
-    # layer = top
-
-    # Set this to true to use X11 output on Wayland.
     force_xwayland = false
 
     ### Legacy
-
-    # Use the Xinerama extension instead of RandR for multi-monitor support.
-    # This setting is provided for compatibility with older nVidia drivers that
-    # do not support RandR and using it on systems that support RandR is highly
-    # discouraged.
-    #
-    # By enabling this setting dunst will not be able to detect when a monitor
-    # is connected or disconnected which might break follow mode if the screen
-    # layout changes.
     force_xinerama = false
 
     ### mouse
@@ -421,5 +387,9 @@
 # vim: ft=cfg
 [volume-change]
     stack_tag = "volumechange"
+    history_ignore = yes
+
+[power-menu]
+    stack_tag = "powermenu"
     history_ignore = yes
 

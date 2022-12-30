@@ -16,7 +16,6 @@ set $alt Mod1
 set $scriptsDir ~/.picomputer/scripts
 
 # Font for window titles
-font pango:JetBrains Mono Bold 11
 title_align center
 
 # Disable titlebar
@@ -40,7 +39,7 @@ client.background       #232323
 # xset s <lock> <blank> (in seconds)
 # xss-lock will use i3lock to lock the screen
 exec --no-startup-id $scriptsDir/powermenu.sh --xset
-exec --no-startup-id xss-lock -- $scriptsDir/lockscreen.sh
+exec --no-startup-id xss-lock -- $scriptsDir/sleepscreen.py
 bindsym $mod+shift+Escape exec $scriptsDir/lockscreen.sh
 
 
@@ -79,7 +78,7 @@ floating_modifier $mod
 focus_follows_mouse no
 
 # Cause app to float above tiled windows
-floating_maximum_size 1440 x 360
+floating_maximum_size 1440 x 420
 for_window [window_role="About"] floating enable
 for_window [window_role="pop-up"] floating enable
 
@@ -225,6 +224,7 @@ mode "RESIZE ↘"{
      # Bindings floating mode
      #
      bindsym $mod+c move position center
+     bindsym $mod+f resize set 1001 420, move position center
 
         # Pressing left will shrink the window’s width.
         # Pressing right will grow the window’s width.

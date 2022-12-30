@@ -48,7 +48,7 @@ font-0 = ${fonts.font0}
 font-1 = ${fonts.font1}
 font-2 = ${fonts.font2}
 
-modules-left = i3 memory music
+modules-left = i3 memory
 modules-center = xwindow
 modules-right = wlan pulseaudio pibattery time
 
@@ -61,7 +61,7 @@ modules-right = wlan pulseaudio pibattery time
 
 [module/xwindow]
 type = internal/xwindow
-label = %title:0:91:...%
+label = %title:0:82:...%
 label-empty = piComputer
 label-empty-font = 2
 label-empty-foreground = ${colors.orange}
@@ -150,7 +150,8 @@ format-disconnected-padding = 1
 ramp-signal-0 = ◌
 ramp-signal-1 = ◯
 ramp-signal-2 = ◎
-ramp-signal-3 = ●
+ramp-signal-3 = ◎
+ramp-signal-4 = ●
 
 [module/time]
 type = internal/date
@@ -180,15 +181,6 @@ ramp-volume-1 =  ─■───
 ramp-volume-2 =  ──■──
 ramp-volume-3 =  ───■─
 ramp-volume-4 =  ────■
-
-;ramp-volume-0 =  ▁  
-;ramp-volume-1 =  ▂  
-;ramp-volume-2 =  ▃ 
-;ramp-volume-3 =  ▄
-;ramp-volume-4 =  ▅
-;ramp-volume-5 =  ▆
-;ramp-volume-6 =  ▇
-;ramp-volume-7 =  █
 
 format-muted = <label-muted>
 label-muted = ───── vol.MUTE

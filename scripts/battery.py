@@ -23,9 +23,9 @@ warning_level = 5
 
 barWidth, icOn, icOff, warn, plug = 5, '■', '┄', '△', '⚡'
 
-def cancelShutdown():
+def cancelShutdown(msg):
     subprocess.call('shutdown -c --no-wall', shell=True)
-    notification = f'dunstify -t 1500 -h {dunstTag} "AC PLUG" "Shutdown canceled."'
+    notification = f'dunstify -t 1500 -h {dunstTag} "{msg}" "Shutdown canceled."'
     subprocess.call(notification, shell=True)
 
 while True:
@@ -68,7 +68,7 @@ while True:
             subprocess.call(notification, shell=True)
 
         if level >= warning_level and shutdown_sched == 1:
-            cancelShutdown()
+            cancelShutdown("Enough power")
 
         if level < warning_level or shutdown_sched == 1:
             print("%{B#FF8700}%{F#232323}","{0} bat.{1}".format(bar,level),"%{B-}%{F-}", flush=True)
@@ -77,7 +77,7 @@ while True:
 
     else: # picomputer is plugged to AC
         if shutdown_sched == 1:
-            cancelShutdown()
+            cancelShutdown("AC plugged")
         print("{0} bat.{1}".format((barWidth-1)*icOff+plug,level), flush=True)
 
     time.sleep(refresh)
