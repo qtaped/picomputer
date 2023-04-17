@@ -40,18 +40,19 @@ URxvt.keysym.M-Escape: perl:keyboard-select:activate
 URxvt.keyboard-select.clipboard: true
 
 ! theme
-! Black Red Yellow Green Blue Magenta Cyan White
-! 0     1   2      3     4    5       6    7
+! Black Red Green Yellow Blue Magenta Cyan White
+! 0     1   2     3      4    5       6    7
+! 8     9   10    11     12   13      14   15
 
-URxvt.internalBorder:                 12
+URxvt.internalBorder:                 6
 
 URxvt*background:                     #232323
 URxvt*foreground:                     #eeeeee
 
 URxvt*color0:                         #424242
 URxvt*color1:                         #d02522
-URxvt*color2:                         #ff8700
-URxvt*color3:                         #5bb95d
+URxvt*color2:                         #5bb95d
+URxvt*color3:                         #ff8700
 URxvt*color4:                         #2b58d0
 URxvt*color5:                         #ee4487
 URxvt*color6:                         #35bba8
@@ -59,8 +60,8 @@ URxvt*color7:                         #eeeeee
 
 URxvt*color8:                         #424242
 URxvt*color9:                         #d02522
-URxvt*color10:                        #ff8700
-URxvt*color11:                        #5bb95d
+URxvt*color10:                        #5bb95d
+URxvt*color11:                        #ff8700
 URxvt*color12:                        #2b58d0
 URxvt*color13:                        #ee4487
 URxvt*color14:                        #35bba8

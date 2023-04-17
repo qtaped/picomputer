@@ -9,10 +9,13 @@ let mapleader = ","
 
 syntax on
 
+hi Search term=bold ctermbg=cyan ctermfg=black
+hi MatchParen ctermbg=black ctermfg=white
 set hlsearch "Highlights search terms"
 set incsearch "Highlights search terms as you type them"
 set showmatch "Highlights matching parentheses"
 
+"Press Enter to remove highlights"
 nnoremap <CR> :noh<CR>
 
 " Bind ctrl+y copy to clipboard
@@ -23,3 +26,4 @@ hi CursorLine   cterm=NONE ctermbg=0
 hi CursorColumn cterm=NONE ctermbg=0
 " set cursorline! cursorcolumn!
 nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
+

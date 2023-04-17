@@ -1,9 +1,19 @@
 # piComputer CHANGELOG
 
+## 0.9.0.4
+### 2023-04-17
+
+- **modified:   config/Xresources** : invert green and yellow colors
+- **modified:   config/vimrc** : change highlights colors
+- **modified:   install.sh** : rofi theme symbolic link changed
+- **modified:   system/config.txt** : found better hdmi timings
+- **modified:   version** : 0.9.0.4
+
+
 ## 0.9.0.3
 ### 2022-12-30
 
-- **modified:   config/Xresources** : add one-line scrolling in urxvt
+- **modified:   config/Xresources** : add one-line scrolling in urxvt (shift+arrow)
 - **modified:   config/dunstrc** : cleaner
 - **modified:   config/i3** : do not lock after n seconds, small corrections
 - **modified:   config/polybar** : disable music module (too unstable)
