@@ -1,5 +1,12 @@
 # piComputer CHANGELOG
 
+## 0.9.1
+### 2023-04-29
+
+- **modified:   install.sh** : added urxvt in packages installation
+- **modified:   version** : 0.9.1
+
+
 ## 0.9.0.4
 ### 2023-04-17
 
