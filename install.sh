@@ -3,238 +3,473 @@
 # piComputer files installer
 # https://github.com/qtaped
 
-INSTALL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-version=$(cat $INSTALL_DIR/version)
-
-picomputersplash() {
+piComputerSplash() {
 
 clear
-echo "       _ _____                   _           "
-echo "   ___|_|     |___ _____ ___ _ _| |_ ___ ___ "
-echo "  | . | |   --| . |     | . | | |  _| -_|  _|"
-echo "  |  _|_|_____|___|_|_|_|  _|___|_| |___|_|  "
-echo "  |_|                   |_|                  "
-echo
-echo "  piComputer $version                    [$chapitre/4]"
-echo "  ..........................................."
-echo "  $msg"
-echo
+echo -e "\033[38;5;3m\n\
+       _ _____                   _            \n\
+   ___|_|     |___ _____ ___ _ _| |_ ___ ___  \n\
+  | . | |   --| . |     | . | | |  _| -_|  _| \n\
+  |  _|_|_____|___|_|_|_|  _|___|_| |___|_|   \n\
+  |_|                   |_|                   \n\n\
+  $topLeftTitle\n\033[0m"
 
+if [ -f $installerLog ]; then
+echo "  Logs available: $installerLog"
+echo
+fi
+echo "  Press any key to continue or 'q' to quit."
+read -sn 1 -r
+if [[ $REPLY =~ ^[Qq]$ ]]; then
+    echo
+    echo "  bye!"
+    echo
+    exit 1
+fi
 }
 
+# installer options
+installerDir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+installerLog="/tmp/piComputer_installer.log"
+tmpLog="/tmp/piComputer_tmp"
+version=$(cat $installerDir/version)
+installPath="$HOME/.picomputer"
 
-installzsh() {
+# whiptail options
+topLeftTitle="piComputer installer $version"
+menuHeight=14
+width=84
+defaultTitle="piComputer"
+defaultMenu="default"
+defaultColor="brown"
 
-while true; do
-   chapitre="2"
-   picomputersplash
-   read -p $'  Install and set zsh as default shell?\n\n→ Continue? [Y/n]' yn
-   case $yn in
+piComputerSplash
 
-[Yy]* )
-echo -e "\n:: Installing zsh and plugins...";
-sudo apt install zsh zsh-autosuggestions zsh-syntax-highlighting
+#change colors of whiptail
+wtColors() {
+  local color="$1"
+  local bgcolor="black"
+  local new_colors="
+  root=$color,$bgcolor
+  window=$color,$bgcolor
+  border=$color,$bgcolor
+  shadow=$color,$bgcolor
+  button=$bgcolor,$color
+  actbutton=$bgcolor,$color
+  compactbutton=$color,$bgcolor
+  title=$color,$bgcolor
+  roottext=$color,$bgcolor
+  textbox=$color,$bgcolor
+  acttextbox=$color,$bgcolor
+  entry=$color,$bgcolor
+  disentry=$color,$bgcolor
+  checkbox=$color,$bgcolor
+  actcheckbox=$bgcolor,$color
+  emptyscale=$color,$bgcolor
+  fullscale=$bgcolor,$color
+  listbox=$color,$bgcolor
+  actlistbox=$color,$bgcolor
+  actsellistbox=$bgcolor,$color
+"
+export NEWT_COLORS="$new_colors"
+}
 
-echo -e "\n:: Setting zsh as default shell...";
-if [ -f $(which zsh) ]; then
-chsh -s $(which zsh)
-else
-msg="Error: zsh was not found. Please try to reinstall it."
-break
+# Simple function using whiptail to display messages
+wtMsg() {
+local title="$1"
+local message="$2"
+local type="$3"
+
+case "$type" in
+    msgbox)
+        height=10
+        ;;
+    gauge)
+        height=8
+        local progress="$4"
+        whiptail --backtitle="$topLeftTitle" --title "$title" --gauge "$message" $height $width $progress
+        return
+        ;;
+    *)
+        height=8
+        ;;
+esac
+
+whiptail --backtitle="$topLeftTitle" --title "$title" --"$type" "$message" $height $width
+}
+
+# Start installer logs
+rm -f $tmpLog
+if [ -f $installerLog ]; then
+  wtColors lightgray
+  if wtMsg "piComputer installer" "A previous piComputer installer log has been found ($installerLog). Do you want to remove it?" "yesno"; then
+    rm -f $installerLog 
+  fi
+fi
+echo -e "$(date) -- $topLeftTitle\n\
+$installerLog\\n\n" >> $installerLog
+
+clear
+
+
+# Functions
+
+
+
+function installPackages() {
+
+# Use apt-get to update and install the selected packages
+if wtMsg "Package Updater" "Would you like to update your package database and upgrade your system?" "yesno"; then
+  # Use apt-get to update the package database
+  wtMsg "$defaultTitle" "Updating package database... Please wait." "infobox"
+  echo "## Update packages" >> $installerLog
+  sudo apt-get update && sudo apt-get upgrade 2>&1 | tee $tmpLog | tee -a $installerLog 
+  # Check if there were any errors during the update
+  if grep -q "E:" $tmpLog 2>&1; then
+    wtColors red
+    wtMsg "Package Updater" "Error updating package database. Please check the output file $installerLog for details." "msgbox"
+    wtColors $defaultColor
+    rm $tmpLog
+  else
+    wtColors green
+    wtMsg "Package Updater" "Package database successfully updated." "msgbox"
+    echo "Package database successfully updated." >> $installerLog
+    wtColors $defaultColor
+  fi
 fi
 
-msg="zsh installed and set as default shell.";
-break;;
 
-[Nn]* )
-   msg=" "
-   break;;
+packages=$(whiptail --backtitle="$topLeftTitle" --title "Package Installation"  --ok-button "Install"  --checklist \
+    "Select packages to install. Packages selected by default are needed." $menuHeight $width 7 \
+    "vim" "programmer's text editor" ON \
+    "xserver-xorg" "X Window System display server" ON \
+    "x11-xserver-utils" "utilities for xserver" ON \
+    "xinit" "X Window System initializer" ON \
+    "xdotool" "command-line X11 automation tool" ON \
+    "zsh" "Z shell" ON \
+    "zsh-autosuggestions" "autosuggestions for zsh" ON \
+    "zsh-syntax-highlighting" "syntax color highlighting for zsh" ON \
+    "xclip" "clipboard" ON \
+    "xss-lock" "use external locker as X screen saver" ON \
+    "python3-pip" "package manager for Python packages" ON \
+    "rxvt-unicode" "terminal emulator" ON \
+    "i3" "tiling window manager" ON \
+    "polybar" "status bars" ON \
+    "dunst" "lightweight notification-daemon" ON \
+    "rofi" "window switcher, run launcher" ON \
+    "ranger" "console file manager" ON \
+    "scrot" "screen capture utility" ON \
+    "feh" "image viewer" ON \
+    "pulseaudio" "sound server system" ON \
+    "pulseaudio-module-bluetooth" "enables audio bluetooth devices" OFF \
+    "htop" "interactive process viewer" OFF \
+    "moc" "console audio player" OFF \
+    "cava" "console audio visualizer" OFF \
+    "qalc" "console calculator" OFF \
+    "lynx" "console browser" OFF \
+    "tty-clock" "console digital clock" OFF \
+    "mpv" "light media player" OFF \
+    "moon-buggy" "console game, a buggy on the moon" OFF \
+    3>&1 1>&2 2>&3)
 
-* )
-   esac
-done
-}
+fail=false
+i=0
+progress=0
+num_packages=$(echo $packages | wc -w)
 
+echo "## installPackages" >> $installerLog
 
-installpkgs() {
-
-while true; do
-   chapitre="3"
-   picomputersplash
-   read -p $'  Install packages for piComputer?\n\n→ Continue? [Y/n]' yn
-   case $yn in
-
-[Yy]* )
-echo -e "\n:: Running apt...";
-sudo apt install vim xserver-xorg xinit rxvt-unicode i3 polybar dunst rofi scrot feh xss-lock pulseaudio pulseaudio-module-bluetooth xdotool xclip moc ranger tty-clock python3-pip
-echo -e "\n:: Installing adafruit_ads1x15 for battery monitoring...";
-sudo pip3 install adafruit_ads1x15
-echo -e "\n:: Installing pynput to wake up screen while sleeping...";
-sudo pip3 install pynput
-msg="Packages have been installed."
-break;;
-
-[Nn]* )
-   msg=" "
-   break;;
-
-* )
-   esac
-done
-}
-
-
-setupdirs() {
-
-echo -ne "\n:: Creating directories..."
-mkdir -p $HOME/.config/polybar
-mkdir -p $HOME/.config/i3
-mkdir -p $HOME/.config/dunst
-mkdir -p $HOME/.config/rofi
-echo "  Done."
-
-if [ -d "$HOME/.picomputer" ];
-then
-
-while true; do
-   read -p $'\n:: piComputer configuration found. Backup? [Y/n]' yn
-   case $yn in
-
-[Yy]* )
-mv -i $HOME/.picomputer $HOME/.picomputer-backup
-echo -e "\n  piComputer configuration backup: $HOME/.picomputer-backup"
-break;;
-
-[Nn]* )
-echo -e "\n:: piComputer configuration found. Remove? [Y/n]"
-rm -rI $HOME/.picomputer
-break;;
-
-* )
-   esac
+for package in $packages; do
+  # check if package is already install
+  if dpkg -s $(echo "$package" | sed "s/\"//g") >/dev/null 2>&1; then
+    let "i+=2"
+    let "progress=$((i * 100 / num_packages / 2))"
+    sleep 1 | wtMsg "$defaultTitle" "Package $package is already installed." "gauge" $progress
+    echo "Package $package is already installed" >> $installerLog
+  else
+    let "i+=1"
+    let "progress=$((i * 100 / num_packages / 2))"
+    sudo apt-get install -y $(echo "$package" | sed "s/\"//g") 2>&1 | tee $tmpLog | tee -a $installerLog | wtMsg "$defaultTitle" "Installing package $package..." "gauge" $progress 
+  if grep -q "E:" $tmpLog 2>&1; then
+    # Display an error message if there were errors
+    fail=true
+    let "i+=1"
+    let "progress=$((i * 100 / num_packages / 2))"
+    wtColors red
+    sleep 2 | wtMsg "Error!" "Error installing package: $package. Please check the output file $installerLog for details." "gauge" $progress
+    rm $tmpLog
+    wtColors $defaultColor
+  else
+    let "i+=1"
+    let "progress=$((i * 100 / num_packages / 2))"
+    sleep 1 | wtMsg "$defaultTitle" "Package $package has been installed." "gauge" $progress
+  fi
+  fi
 done
 
-else
-echo -e "\n:: No existing piComputer configuration found."
+# Install python packages
+if wtMsg "Python Packages Installation" "Would you like to install python packages needed?" "yesno"; then
+  wtMsg "$defaultTitle" "Installing <adafruit_ads1x15> for battery monitoring and <pynput> to wake up screen while sleeping..." "infobox"
+  echo "## Installing <adafruit_ads1x15> for battery monitoring and <pynput> to wake up screen while sleeping..." >> $installerLog
+  sudo pip3 install adafruit_ads1x15 pynput | tee $tmpLog | tee -a $installerLog 
+  # Check if there were any errors during the update
+  if grep -q "ERROR:" $tmpLog 2>&1; then
+    wtColors red
+    wtMsg "Error!" "Error installing python packages with pip3. Please check the output file $installerLog for details." "msgbox"
+    wtColors $defaultColor
+    rm $tmpLog
+  elif grep -q "already" $tmpLog 2>&1; then
+    wtColors green
+    wtMsg "$defaultTitle" "Packages seem to be already installed. Please check the output file $installerLog for details." "msgbox"
+    rm $tmpLog
+    wtColors $defaultColor
+  else
+    wtColors green
+    wtMsg "$defaultTitle" "Python packages installed." "msgbox"
+    echo "Python packages installed." >> $installerLog
+    wtColors $defaultColor
+  fi
 fi
 
-echo -n "  Copying configuration files to $HOME/.picomputer"
-mkdir -p $HOME/.picomputer
-cp -r $INSTALL_DIR/config $HOME/.picomputer
-cp -r $INSTALL_DIR/images $HOME/.picomputer
-cp -r $INSTALL_DIR/scripts $HOME/.picomputer
-echo "  [OK]"
+# Check if zsh is set as default shell and if not, ask for it.
+if [ "$(echo $SHELL)" != "$(which zsh)" ] && wtMsg "$defaultTitle" "Do you want to set zsh as default shell?" "yesno"; then
+  echo "## setting zsh as default shell" >> $installerLog
+  wtMsg "$defaultTitle" "Setting zsh as default shell... Please enter sudo password." "infobox"
 
-echo -n "  chmod +x scripts"
-chmod +x $HOME/.picomputer/scripts/*
-echo "  [OK]"
+  if [ -f $(which zsh) ]; then
+    if chsh -s $(which zsh); then
+      wtColors green
+      wtMsg "$defaultTitle" "zsh is now the default shell." "msgbox"
+      echo "zsh is now the default shell." >> $installerLog
+      wtColors $defaultColor
+    else
+      wtColors red
+      wtMsg "Error." "Error while trying to set zsh as default shell. Please retry." "msgbox"
+      echo "Error while trying to set zsh as default shell." >> $installerLog
+      wtColors $defaultColor
+    fi
+  else
+    wtColors red
+    wtMsg "Error." "zsh was not found. Please try to reinstall it." "msgbox"
+    echo "Error: zsh was not found. Please try to reinstall it." >> $installerLog
+    wtColors $defaultColor
+  fi
+else
+  wtColors lightgray
+  wtMsg "$defaultTitle" "Z shell is already installed and used. Nothing to do." "msgbox"
+  wtColors $defaultColor
+fi
 
-}
-
-linkconfigfiles() {
-
-echo -e "\n:: Linking config files..."
-
-while true; do
-   read -p $'\n  Overwriting all configuration files?\n\n  \'Yes\' will overwrite all existing files without confirmation.\n  \'No\' will ask you before overwriting each file.\n\n[Y/n]? ' yn
-   case $yn in
-
-[Yy]* )
-ln_opt="-sf"
-break;;
-
-[Nn]* )
-ln_opt="-sfi"
-break;;
-
-* )
-   esac
-done
-
-sudo ln $ln_opt $HOME/.picomputer/config/motd /etc/motd
-ln $ln_opt $HOME/.picomputer/config/zshrc $HOME/.zshrc
-ln $ln_opt $HOME/.picomputer/config/zshrc.local $HOME/.zshrc.local
-ln $ln_opt $HOME/.picomputer/config/zprofile $HOME/.zprofile
-ln $ln_opt $HOME/.picomputer/config/Xresources $HOME/.Xresources
-ln $ln_opt $HOME/.picomputer/config/polybar $HOME/.config/polybar/config
-ln $ln_opt $HOME/.picomputer/config/i3 $HOME/.config/i3/config
-ln $ln_opt $HOME/.picomputer/config/dunstrc $HOME/.config/dunst/dunstrc
-ln $ln_opt $HOME/.picomputer/config/rofi $HOME/.config/rofi/config.rasi
-ln $ln_opt $HOME/.picomputer/config/picomputer.rasi $HOME/.config/rofi/picomputer.rasi
-ln $ln_opt $HOME/.picomputer/config/vimrc $HOME/.vimrc
-xrdb $HOME/.Xresources
-
-}
-
-installfonts() {
-
-while true; do
-   read -p $':: Install fonts for piComputer?\n\n→ Continue? [Y/n]' yn
-   case $yn in
-
-[Yy]* )
-echo -e "\n:: Copying fonts to $HOME/.fonts...";
-mkdir -p $HOME/.fonts
-cp -r $INSTALL_DIR/fonts/JetBrainsMono $HOME/.fonts/
-fc-list | grep JetBrains
-echo -e "\n Fonts installed in $HOME/.fonts";
-break;;
-
-[Nn]* )
-   break;;
-
-* )
-   esac
-done
-}
-
-installconfig() {
-while true; do
-   chapitre="4"
-   picomputersplash
-
-   read -p $'  Install all config files for piComputer? \n\n  BECAREFUL: It will ask you if you want to remove configuration files.\n\n→ Continue? [Y/n]' yn
-   case $yn in
-
-[Yy]* )
-echo -e "\n:: Running...";
-setupdirs
-linkconfigfiles
-installfonts
-echo -e "\n:: Installation complete. Do you want to remove installation folder? [Y/n]"
-sudo rm -rI $INSTALL_DIR
-echo -e "\n\n:: Done. All configuration files are here: $HOME/.picomputer"
-echo -e "\n  enjoy!\n"
-exit;;
-
-[Nn]* )
-   msg=" "
-   break;;
-* )
-   esac
-done
-
+# if a package failed to install, display a message
+if $fail; then
+  wtColors red
+  echo "There was an error during installing." >> $installerLog
+  wtMsg "Package Installation" "There was an error during installing. Please check the output file $installerLog for details." "msgbox"
+else
+  if test -z "$packages"; then
+    wtColors lightgray
+    echo "Nothing to install." >> $installerLog
+    wtMsg "Package Installation" "Nothing to install." "msgbox"
+    return
+  fi
+  wtColors green
+  echo "All packages selected were successfully installed." >> $installerLog
+  wtMsg "Package Installation" "All packages selected were successfully installed." "msgbox"
+  defaultMenu="Configuration" #highlight next item menu if succeed
+fi
 }
 
 
-## Welcome
+
+function installConfig() {
+
+if wtMsg "$defaultTitle" "Do you want to install piComputer configuration files?" "yesno"; then
+  echo "## installConfig" >> $installerLog
+
+  # Check if a piComputer configuration folder already exists and ask to backup or remove it
+  if [ -d $installPath ]; then   
+      if wtMsg "$defaultTitle" "piComputer configuration found. Do you want to backup it?" "yesno"; then
+        mv $installPath $HOME/picomputer-backup
+        echo -e "piComputer configuration has been backup: $HOME/picomputer-backup" >> $installerLog
+        wtMsg "$defaultTitle" "piComputer configuration has been backup: $HOME/picomputer-backup" "msgbox"
+      else
+        if wtMsg "$defaultTitle" "Delete old picomputer configuration folder?" "yesno"; then
+          rm -fr $installPath
+          echo "$installPath was removed" >> $installerLog
+	fi
+      fi
+  fi
+else
+    return
+fi
+
+# Create needed directories
+makeDirectories="\
+$installPath
+$HOME/.config/polybar
+$HOME/.config/i3
+$HOME/.config/dunst
+$HOME/.config/rofi"
+
+i=0
+progress=0
+countItems=0
+
+while read -r mdir; do
+  let "countItems+=1"
+done <<< "$makeDirectories"
+
+while read -r mdir; do
+  let "i+=1"
+  let "progress=$((i * 100 / countItems))"
+  mkdir -p $mdir && sleep .5 | wtMsg "Creating direectories..." "$mdir has been created." "gauge" $progress
+  echo "$mdir has been created." >> $installerLog
+done <<< "$makeDirectories"
+
+# Copy files
+cpDirectories="\
+$installerDir/config $installPath
+$installerDir/images $installPath
+$installerDir/scripts $installPath"
+
+i=0
+progress=0
+countItems=0
+
+while read -r cpdir; do
+  let "countItems+=1"
+done <<< "$cpDirectories"
+
+while read -r cpdir; do
+  let "i+=1"
+  let "progress=$((i * 100 / countItems))"
+  cp -r $cpdir && sleep .5 | wtMsg "Copying directories..." "$cpdir has been copied." "gauge" $progress
+  echo "$cpdir has been copied." >> $installerLog
+done <<< "$cpDirectories"
+
+
+# Make scripts executable
+if chmod +x $installPath/scripts/*; then
+  echo "Make scripts executable (chmod +x)" >> $installerLog
+fi
+
+#Link configuration files
+
+if wtMsg "$defaultTitle" "Linking configuration files to standard path. This will override all existing configuration files. Continue?  <Yes> You can ignore this message." "yesno"; then
+  echo "Linking config files..." >> $installerLog
+else
+  wtColors red
+  echo "Error: Do not want to link config files." >> $installerLog
+  wtMsg "Error." "Configuration files have not been linked." "msgbox"
+  return
+fi
+
+confFiles="\
+sudo ln -sf $installPath/config/motd /etc/motd
+ln -sf $installPath/config/zshrc $HOME/.zshrc
+ln -sf $installPath/config/zshrc.local $HOME/.zshrc.local
+ln -sf $installPath/config/zprofile $HOME/.zprofile
+ln -sf $installPath/config/Xresources $HOME/.Xresources
+ln -sf $installPath/config/polybar $HOME/.config/polybar/config
+ln -sf $installPath/config/i3 $HOME/.config/i3/config
+ln -sf $installPath/config/dunstrc $HOME/.config/dunst/dunstrc
+ln -sf $installPath/config/rofi $HOME/.config/rofi/config.rasi
+ln -sf $installPath/config/rofi.rasi $HOME/.config/rofi/picomputer.rasi
+ln -sf $installPath/config/vimrc $HOME/.vimrc
+xrdb $HOME/.Xresources"
+
+i=0
+progress=0
+countItems=0
+
+while read -r cfile; do
+  let "countItems+=1"
+done <<< "$confFiles"
+
+while read -r cfile; do
+  let "i+=1"
+  let "progress=$((i * 100 / countItems))"
+  $cfile && sleep .5 | wtMsg "Linking configuration files..." "$cfile" "gauge" $progress
+  echo "$cfile" >> $installerLog
+done <<< "$confFiles"
+wtColors green
+wtMsg "$defaultTitle" "Done. Configuration files can be found here: $installPath" "msgbox"
+defaultMenu="Fonts"
+
+}
+
+
+
+installFonts() {
+
+if wtMsg "$defaultTitle" "Do you want to install JetBrains Mono font for piComputer?" "yesno"; then
+
+  echo "## installFonts" >> $installerLog
+  echo "Copying fonts to $HOME/.fonts" >> $installerLog
+  mkdir -p $HOME/.fonts
+  cp -r $installerDir/fonts/JetBrainsMono $HOME/.fonts/
+  if fc-list | grep JetBrains; then
+  wtColors green
+  echo "JetBrains Mono font has been copied ($HOME/.fonts/JetBrainsMono)." >> $installerLog
+  wtMsg "$defaultTitle" "JetBrains Mono font has been copied to $HOME/.fonts/JetBrainsMono" "msgbox"
+  else
+  wtColors red
+  echo "JetBrains Mono font has not been found." >> $installerLog
+  wtMsg "Error." "JetBrains Mono font has not been found." "msgbox"
+  fi
+  defaultMenu="Reboot"
+else
+    return
+fi
+
+}
+
+rebootPi() {
+wtColors red
+if wtMsg "$defaultTitle" "Do you want to reboot piComputer?" "yesno"; then
+  reboot
+fi
+}
+
+outputLog() {
+wtColors lightgray
+whiptail --backtitle="$topLeftTitle" --title="piComputer installer output log" --scrolltext --textbox $installerLog --ok-button "Go back" $menuHeight $width
+}
+
+# Main Menu
 
 while true; do
-   chapitre="1"
-   picomputersplash
-   read -p $'  Welcome.\n\n→ Continue? [Y/n]' yn
+  wtColors $defaultColor
+  choice=$(whiptail --backtitle="$topLeftTitle" --title "piComputer installer" --default-item "$defaultMenu" --ok-button "Select" --cancel-button "Exit" --menu "Choose an option:" $menuHeight $width 6 \
+    "Packages" "install needed packages using apt" \
+    "Configuration" "install piComputer configuration files" \
+    "Fonts" "install JetBrains Mono font" \
+    "Reboot" "reboot piComputer" \
+    "Output Log" "installer log output" \
+    "About" "piComputer v0.9.2" \
+    3>&1 1>&2 2>&3)
 
-   case $yn in
-[Yy]* )
-msg=" "
-installzsh
-installpkgs
-installconfig;;
 
-[NnQq]* )
-echo -e "\n  :(\n"
-exit;;
-* )
-msg="Enter (y)es or (n)o.";;
-   esac
+  [[ "$?" = 1 ]] && break; # exit if canceled
+
+  case $choice in
+      "Packages")
+          installPackages
+          ;;
+      "Configuration")
+          installConfig
+          ;;
+      "Fonts")
+          installFonts
+          ;;
+      "Reboot")
+          rebootPi
+          ;;
+      "Output Log")
+          outputLog
+          ;;
+      "About")
+          piComputerSplash
+          ;;
+  esac
 done

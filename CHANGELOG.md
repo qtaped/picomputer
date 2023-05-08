@@ -1,5 +1,13 @@
 # piComputer CHANGELOG
 
+## 0.9.2
+### 2023-05-17
+
+- **renamed:    config/picomputer.rasi -> config/rofi.rasi**
+- **modified:   install.sh** : complete redesign of the interface using whiptail as dialog box
+- **modified:   version** : 0.9.2
+
+
 ## 0.9.1
 ### 2023-04-29
 
