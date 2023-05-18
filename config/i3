@@ -275,5 +275,8 @@ exec_always --no-startup-id feh --bg-scale ~/.picomputer/images/background.png
 # Hide mouse cursor
 exec_always --no-startup-id $scriptsDir/xbanish &
 
+# Allow user to control capslock led state (needed for scripts/sleepscreen.py)
+exec_always --no-startup-id sudo chown $USER /sys/class/leds/input0::capslock/brightness
+
 # Start Apps 
 # exec_always --no-startup-id urxvt -e tty-clock -cs -C 2

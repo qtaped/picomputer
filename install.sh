@@ -162,12 +162,12 @@ packages=$(whiptail --backtitle="$topLeftTitle" --title "Package Installation"  
     "feh" "image viewer" ON \
     "pulseaudio" "sound server system" ON \
     "pulseaudio-module-bluetooth" "enables audio bluetooth devices" OFF \
-    "htop" "interactive process viewer" OFF \
     "moc" "console audio player" OFF \
     "cava" "console audio visualizer" OFF \
     "qalc" "console calculator" OFF \
     "lynx" "console browser" OFF \
     "tty-clock" "console digital clock" OFF \
+    "cmatrix" "scrolling Matrix like screen" OFF \
     "mpv" "light media player" OFF \
     "moon-buggy" "console game, a buggy on the moon" OFF \
     3>&1 1>&2 2>&3)
@@ -236,7 +236,8 @@ if [ "$(echo $SHELL)" != "$(which zsh)" ] && wtMsg "$defaultTitle" "Do you want 
   echo "## setting zsh as default shell" >> $installerLog
   wtMsg "$defaultTitle" "Setting zsh as default shell... Please enter sudo password." "infobox"
 
-  if [ -f $(which zsh) ]; then
+  if [ $(which zsh) ]; then
+      echo "zsh was found." >> $installerLog
     if chsh -s $(which zsh); then
       wtColors green
       wtMsg "$defaultTitle" "zsh is now the default shell." "msgbox"
@@ -283,6 +284,38 @@ fi
 
 function installConfig() {
 
+# Check if urxvt is set as default terminal and if not, ask for it.
+termDefault="ls -l /etc/alternatives/x-terminal-emulator | grep urxvt >/dev/null"
+if ! eval "$termDefault"; then
+  if wtMsg "$defaultTitle" "urxvt is not the terminal set by default. Do you want to configure it?" "yesno"; then
+    echo "## setting urxvt as default terminal" >> $installerLog
+    wtMsg "$defaultTitle" "Setting urxvt as default terminal..." "infobox"
+    sudo update-alternatives --set x-terminal-emulator /usr/bin/urxvt >> $installerLog
+    if [ $(which urxvt) ]; then
+      echo "urxvt was found." >> $installerLog
+      if eval "$termDefault"; then
+        wtColors green
+        wtMsg "$defaultTitle" "urxvt is now the default terminal." "msgbox"
+        echo "urxvt is now the default terminal." >> $installerLog
+        wtColors $defaultColor
+      else
+        wtColors red
+        wtMsg "Error." "Error while trying to set urxvt as default terminal. Please retry." "msgbox"
+        echo "Error while trying to set urxvt as default terminal." >> $installerLog
+        wtColors $defaultColor
+      fi
+    else
+      wtColors red
+      wtMsg "Error." "urxvt was not found. Please try to reinstall it." "msgbox"
+      echo "Error: urxvt was not found. Please try to reinstall it." >> $installerLog
+      wtColors $defaultColor
+    fi
+  fi
+else
+    echo "urxvt is already the default terminal." >> $installerLog
+fi
+
+# Install configuration files
 if wtMsg "$defaultTitle" "Do you want to install piComputer configuration files?" "yesno"; then
   echo "## installConfig" >> $installerLog
 
@@ -309,7 +342,8 @@ $installPath
 $HOME/.config/polybar
 $HOME/.config/i3
 $HOME/.config/dunst
-$HOME/.config/rofi"
+$HOME/.config/rofi
+$HOME/.urxvt/ext"
 
 i=0
 progress=0
@@ -367,7 +401,6 @@ fi
 confFiles="\
 sudo ln -sf $installPath/config/motd /etc/motd
 ln -sf $installPath/config/zshrc $HOME/.zshrc
-ln -sf $installPath/config/zshrc.local $HOME/.zshrc.local
 ln -sf $installPath/config/zprofile $HOME/.zprofile
 ln -sf $installPath/config/Xresources $HOME/.Xresources
 ln -sf $installPath/config/polybar $HOME/.config/polybar/config
@@ -376,6 +409,7 @@ ln -sf $installPath/config/dunstrc $HOME/.config/dunst/dunstrc
 ln -sf $installPath/config/rofi $HOME/.config/rofi/config.rasi
 ln -sf $installPath/config/rofi.rasi $HOME/.config/rofi/picomputer.rasi
 ln -sf $installPath/config/vimrc $HOME/.vimrc
+ln -sf $installPath/config/urxvt-keyboard-select $HOME/.urxvt/ext/keyboard-select
 xrdb $HOME/.Xresources"
 
 i=0
