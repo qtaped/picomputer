@@ -1,4 +1,14 @@
-# piComputer CHANGELOG
+## 0.9.2.1
+### 2023-05-18
+
+- **modified:   config/i3** : fix permissions for capslock led state
+- **new file:   config/urxvt-keyboard-select** : add keyboard selection like vim in terminal
+- **modified:   config/zshrc** : merged with zshrc.local
+- **deleted:    config/zshrc.local** : you can now use ~/.zshrc.local for your own customisations
+- **modified:   install.sh** : update, corrections, check if urxvt is set as default terminal
+- **modified:   README.md** : add a simple message
+- **modified:   version** : 0.9.2.1
+
 
 ## 0.9.2
 ### 2023-05-17

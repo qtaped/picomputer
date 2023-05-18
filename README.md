@@ -16,6 +16,8 @@ I am a graphic designer, not an engineer neither a developer. You have been warn
 
 > This project is at his early stage. It is not guaranteed to work. But it works. I guess.
 
+**The installer works much better since version 0.9.2 (May 2023). Many things were missing.**   
+
 <img src="images/piComputer_screenshot.png" width="100%">
 
 The interface is based on [i3](https://i3wm.org/) + [polybar](https://github.com/polybar/polybar).  
