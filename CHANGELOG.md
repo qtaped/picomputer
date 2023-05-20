@@ -1,3 +1,10 @@
+## 0.9.2.2
+### 2023-05-20
+
+- **modified:   install.sh** : check if i2c is enabled
+- **modified:   version** : 0.9.2.2
+
+
 ## 0.9.2.1
 ### 2023-05-18
 

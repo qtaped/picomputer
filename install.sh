@@ -315,6 +315,27 @@ else
     echo "urxvt is already the default terminal." >> $installerLog
 fi
 
+# Check if i2c is enabled. If not, ask for enable it.
+if [[ $(sudo raspi-config nonint get_i2c) == 1  ]]; then
+  if wtMsg "$defaultTitle" "i2c protocol is disabled. You have to enable it, continue?" "yesno"; then
+    echo "## enabling i2c" >> $installerLog
+    sudo raspi-config nonint do_i2c 0 | wtMsg "$defaultTitle" "Enabling i2c..." "infobox"
+    if [[ $(sudo raspi-config nonint get_i2c) == 0  ]]; then
+      wtColors green
+      wtMsg "$defaultTitle" "i2c has been enabled." "msgbox"
+      echo "i2c has been enabled." >> $installerLog
+      wtColors $defaultColor
+    else
+      wtColors red
+      wtMsg "Error." "i2c is still disabled. Please try again or do it with <sudo raspi-config>." "msgbox"
+      echo "Error: i2c is still disabled." >> $installerLog
+      wtColors $defaultColor
+    fi
+  fi
+else
+    echo "i2c is already enabled." >> $installerLog
+fi
+
 # Install configuration files
 if wtMsg "$defaultTitle" "Do you want to install piComputer configuration files?" "yesno"; then
   echo "## installConfig" >> $installerLog
@@ -480,7 +501,7 @@ while true; do
     "Fonts" "install JetBrains Mono font" \
     "Reboot" "reboot piComputer" \
     "Output Log" "installer log output" \
-    "About" "piComputer v0.9.2" \
+    "About" "piComputer $version" \
     3>&1 1>&2 2>&3)
 
 
