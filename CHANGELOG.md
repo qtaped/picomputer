@@ -1,3 +1,10 @@
+## 0.9.2.3
+### 2023-05-23
+
+- **modified:   scripts/powermenu.sh** : add dpms toggle with xset
+- **modified:   version** : 0.9.2.3
+
+
 ## 0.9.2.2
 ### 2023-05-20
 

@@ -22,7 +22,7 @@ fi
 dunstify -u critical -h string:x-dunst-stack-tag:powermenu \
 " ⌄     POWER MENU" \
 "    ----------------\n\
-[<b>X</b>]set is <i>$xsetStatus</i>\n\
+[<b>X</b>]sleep <i>$xsetStatus</i>\n\
 [<b>S</b>]creen off\n\
 [<b>L</b>]ock session\n\
 [<b>E</b>]xit session\n\n\
@@ -40,8 +40,10 @@ xset s $timeOut $Cycle
 
 if [[ $xsetq == 0 ]]; then
 xset s $timeOut $Cycle
+xset +dpms
 else
 xset s 0 0
+xset -dpms
 fi
 
 # refresh menu
