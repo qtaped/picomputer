@@ -5,4 +5,4 @@ configuration {
  }
 
 
- @theme "picomputer"
+ @theme "picomputer.rasi"

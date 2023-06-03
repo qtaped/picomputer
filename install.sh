@@ -30,7 +30,7 @@ fi
 
 # installer options
 installerDir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-installerLog="/tmp/piComputer_installer.log"
+installerLog="$installerDir/piComputer_installer.log"
 tmpLog="/tmp/piComputer_tmp"
 version=$(cat $installerDir/version)
 installPath="$HOME/.picomputer"

@@ -1,3 +1,13 @@
+## 0.9.3
+### 2023-06-03
+
+- **modified:   config/i3** : add floating wifi manager
+- **modified:   config/rofi** : picomputer > picomputer.rasi
+- **modified:   install.sh** : change log location
+- **modified:   scripts/wifictl.sh** : complete redesign using native tools
+- **modified:   version** : 0.9.3
+
+
 ## 0.9.2.3
 ### 2023-05-23
 
@@ -96,4 +106,3 @@
 - **modified:   scripts/wifictl.sh** : corrections, ifconfig up/down, edit wpa
 - **modified:   system/config.txt** : cleaner version
 - **modified:   version** : 0.9
-

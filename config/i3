@@ -78,9 +78,10 @@ floating_modifier $mod
 focus_follows_mouse no
 
 # Cause app to float above tiled windows
-floating_maximum_size 1440 x 420
+floating_maximum_size 1440 x 442
 for_window [window_role="About"] floating enable
 for_window [window_role="pop-up"] floating enable
+for_window [title="piComputer wifi manager"] floating enable, resize set 960 442, move position 960 38
 
 # start a terminal
 bindsym $mod+Return exec urxvt
