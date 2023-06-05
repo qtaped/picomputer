@@ -81,11 +81,11 @@ selectNetwork() {
   local options=()
   while IFS= read -r network; do
     if [[ -n "$network" ]]; then
-      options+=("$network" "")
+      options+=("$network" "   ")
     fi
   done <<< "$networks"
 
-  options+=("<Other network>" "?")
+  options+=("<Other network>" " ? ")
 
   selected=$(whiptail --backtitle="$topLeftTitle" --ok-button "Connect" --menu "Select a network:" $wSize 4 "${options[@]}" 3>&1 1>&2 2>&3)
   if [[ "$selected" == "<Other network>" ]]; then
@@ -96,21 +96,21 @@ selectNetwork() {
 }
 
 enterPassword() {
-  password=$(whiptail --title "Wi-Fi Password" --passwordbox "Enter the password for the selected network (8-63 characters). Or leave it empty if none." $wSize 3>&1 1>&2 2>&3)
+  password=$(whiptail --backtitle "$topLeftTitle" --passwordbox "Enter the password for <$network>.\
+                                                                                                \
+  Or leave it empty if none." $wSize 3>&1 1>&2 2>&3)
 }
 
 changeInterface() {
-  wifiInterface=$(whiptail --title "Wi-Fi Interface" --inputbox "Enter the name of wireless interface: (default: wlan0)" $wSize "$wifiInterface" 3>&1 1>&2 2>&3)
-  if [[ -z "$wifiInterface"  ]]; then
+  wifiInterface=$(whiptail --backtitle "$topLeftTitle" --inputbox "Enter the name of wireless interface: (default: wlan0)" $wSize "$wifiInterface" 3>&1 1>&2 2>&3)
+  if [[ -z "$wifiInterface" ]]; then
   wifiInterface="wlan0"
   fi
+  wpaReconfigure
 }
 
 wpaReconfigure() {
-  if sudo wpa_cli -i $wifiInterface reconfigure; then
-  wtColors green
-  whiptail --backtitle "$topLeftTitle" --msgbox "wpa_cli configuration has been reload." $wSize
-  else
+  if ! sudo wpa_cli -i $wifiInterface reconfigure >/dev/null; then
   wtColors red
   whiptail --backtitle "$topLeftTitle" --msgbox "Error. Cannot reload wpa_cli configuration. Wrong interface?" $wSize
   fi
@@ -123,7 +123,7 @@ connectNetwork() {
     wpa_passphrase "$network" "$password" | sudo tee -a $wpaConfig >/dev/null
     wpaReconfigure
     wtColors green
-    whiptail --title "Wireless network added" --msgbox "$network has been added to $wpaConfig" $wSize;
+    whiptail --backtitle "$topLeftTitle" --msgbox "<$network> has been added to $wpaConfig" $wSize;
   elif [[ -n "$network" && -z "$password" ]]; then
     echo  | sudo tee -a $wpaConfig >/dev/null
     echo network={ | sudo tee -a $wpaConfig >/dev/null
@@ -132,7 +132,7 @@ connectNetwork() {
     echo "}" | sudo tee -a $wpaConfig >/dev/null
     wpaReconfigure
     wtColors green
-    whiptail --title "Wireless network added" --msgbox "$network has been added to $wpaConfig without password." $wSize;
+    whiptail --backtitle "$topLeftTitle" --msgbox "<$network> has been added to $wpaConfig without password." $wSize;
   else
     wtColors red
     whiptail --backtitle "$topLeftTitle" --msgbox "No valid network or password provided." $wSize
@@ -146,7 +146,16 @@ scanWifi
 selectNetwork
 
 # Check if a network has been selected
-if [[ -n "$network" ]]; then
+while [[ -n "$network" ]]; do 
+  # check if network is not in wpa config file
+  if sudo grep -w "$network" $wpaConfig >/dev/null; then
+    wtColors white
+    if whiptail --backtitle "$topLeftTitle" --defaultno --yesno "<$network> is already in your network list. Do you want to add it again?" $wSize; then
+      wtColors $defaultColor
+    else
+      break
+    fi
+  fi
 
 enterPassword
 # validate the password length
@@ -154,7 +163,7 @@ if [[ -n "$password" ]]; then
   while ((${#password} < 8 || ${#password} > 63)); do
     password=""
     wtColors red
-    if whiptail --backtitle "$topLeftTitle" --title "Invalid Password" --yesno "Password must be 8 to 63 characters long. Retry?" $wSize; then
+    if whiptail --backtitle "$topLeftTitle" --yesno "Password must be 8 to 63 characters long. Retry?" $wSize; then
     wtColors $defaultColor
     enterPassword
     else
@@ -163,11 +172,12 @@ if [[ -n "$password" ]]; then
   done
 fi
 
-  # confirm network connection
+# confirm network connection
 if [[ -z "$password" ]]; then
-  whiptail --title "Confirm Network Connection" --yesno "Are you sure you want to connect to \"$network\" without password?" $wSize
+  wtColors red
+  whiptail --backtitle "$topLeftTitle" --defaultno --yesno "Are you sure you want to connect to <$network> without password?" $wSize
 else
-  whiptail --title "Confirm Network Connection" --yesno "Are you sure you want to connect to \"$network\"?" $wSize
+  whiptail --backtitle "$topLeftTitle" --yesno "Are you sure you want to connect to <$network>?" $wSize
 fi
   local choice=$?
   if [[ $choice -ne 0 ]]; then
@@ -176,18 +186,15 @@ fi
   fi
 
   connectNetwork
+  break
 
-else
-  wtColors red
-  whiptail --backtitle "$topLeftTitle" --msgbox "No network selected." $wSize
-fi
-
+done
 
 }
 
 getInterface() {
 
-if ifconfig -s | grep -w $wifiInterface; then
+if ifconfig -s | grep -w $wifiInterface >/dev/null; then
   upDown="down"
 else
   upDown="up"
@@ -197,14 +204,14 @@ fi
 
 toggleInterface() {
 
-if ifconfig -s | grep -w $wifiInterface; then
+if ifconfig -s | grep -w $wifiInterface >/dev/null; then
   wtColors green
-  if whiptail --title "Wifi interface" --yesno "$wifiInterface is up. Do you want to turn it down?" $wSize; then
+  if whiptail --backtitle "$topLeftTitle" --yesno "<$wifiInterface> is up. Do you want to turn it down?" $wSize; then
   sudo ifconfig $wifiInterface down
   fi
 else
   wtColors red
-  if whiptail --title "Wifi interface" --yesno "$wifiInterface is down. Do you want to turn it up?" $wSize; then
+  if whiptail --backtitle "$topLeftTitle" --yesno "<$wifiInterface> is down. Do you want to turn it up?" $wSize; then
   sudo ifconfig $wifiInterface up
   wpaReconfigure
   fi
@@ -219,7 +226,7 @@ while true; do
   getInterface
   topLeftTitle="Interface: $wifiInterface | $show_ssid"
   wtColors $defaultColor
-  choice=$(whiptail --backtitle="$topLeftTitle" --ok-button "Select" --cancel-button "Exit" --menu "piComputer wifi manager" $wSize 3 \
+  choice=$(whiptail --backtitle="$topLeftTitle" --ok-button "Select" --cancel-button "Exit" --menu "piComputer wifi manager" $wSize 4 \
     "Connect" "list wireless networks & connect" \
     "Toggle" "turn $upDown <$wifiInterface> interface" \
     "Interface" "change wireless interface" \

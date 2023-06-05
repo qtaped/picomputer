@@ -1,3 +1,10 @@
+## 0.9.3.1
+### 2023-06-05
+
+- **modified:   scripts/wifictl.sh** : adjustments, check if network is already in conf file
+- **modified:   version** : 0.9.3.1
+
+
 ## 0.9.3
 ### 2023-06-03
 
@@ -106,3 +113,4 @@
 - **modified:   scripts/wifictl.sh** : corrections, ifconfig up/down, edit wpa
 - **modified:   system/config.txt** : cleaner version
 - **modified:   version** : 0.9
+
