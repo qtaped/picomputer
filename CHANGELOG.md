@@ -1,3 +1,10 @@
+## 0.9.4
+### 2023-06-12
+
+- **new file:   setup.sh** : script to run before install (see [wiki](https://github.com/qtaped/picomputer/wiki/installation))
+- **modified:   version** : 0.9.4
+
+
 ## 0.9.3.1
 ### 2023-06-05
 
@@ -113,4 +120,3 @@
 - **modified:   scripts/wifictl.sh** : corrections, ifconfig up/down, edit wpa
 - **modified:   system/config.txt** : cleaner version
 - **modified:   version** : 0.9
-
