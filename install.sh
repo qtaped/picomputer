@@ -162,6 +162,7 @@ packages=$(whiptail --backtitle="$topLeftTitle" --title "Package Installation"  
     "feh" "image viewer" ON \
     "pulseaudio" "sound server system" ON \
     "pulseaudio-module-bluetooth" "enables audio bluetooth devices" OFF \
+    "fzf" "command-line fuzzy finder" OFF \
     "moc" "console audio player" OFF \
     "cava" "console audio visualizer" OFF \
     "qalc" "console calculator" OFF \
@@ -231,6 +232,36 @@ if wtMsg "Python Packages Installation" "Would you like to install python packag
   fi
 fi
 
+# Check if vim is set as default editor and if not, ask for it.
+if [[ "$(update-alternatives --display editor | grep currently)" != *"/vim"* ]] && wtMsg "$defaultTitle" "Do you want to set vim as default editor?" "yesno"; then
+  echo "## setting vim as default editor" >> $installerLog
+  wtMsg "$defaultTitle" "Setting vim as default editor... Please enter sudo password." "infobox"
+  #check if vim command is present
+  if command -v vim &> /dev/null; then
+      echo "vim was found." >> $installerLog
+    if sudo update-alternatives --set editor /usr/bin/vim.basic; then
+      wtColors green
+      wtMsg "$defaultTitle" "vim is now the default editor." "msgbox"
+      echo "vim is now the default editor." >> $installerLog
+      wtColors $defaultColor
+    else
+      wtColors red
+      wtMsg "Error." "Error while trying to set vim as default editor. Please retry." "msgbox"
+      echo "Error while trying to set vim as default editor." >> $installerLog
+      wtColors $defaultColor
+    fi
+  else
+    wtColors red
+    wtMsg "Error." "vim was not found. Please try to reinstall it." "msgbox"
+    echo "Error: vim was not found. Please try to reinstall it." >> $installerLog
+    wtColors $defaultColor
+  fi
+else
+  wtColors lightgray
+  wtMsg "$defaultTitle" "vim editor is already installed and set as default. Nothing to do." "msgbox"
+  wtColors $defaultColor
+fi
+
 # Check if zsh is set as default shell and if not, ask for it.
 if [ "$(echo $SHELL)" != "$(which zsh)" ] && wtMsg "$defaultTitle" "Do you want to set zsh as default shell?" "yesno"; then
   echo "## setting zsh as default shell" >> $installerLog
@@ -257,7 +288,7 @@ if [ "$(echo $SHELL)" != "$(which zsh)" ] && wtMsg "$defaultTitle" "Do you want 
   fi
 else
   wtColors lightgray
-  wtMsg "$defaultTitle" "Z shell is already installed and used. Nothing to do." "msgbox"
+  wtMsg "$defaultTitle" "Z shell is already installed and set as default. Nothing to do." "msgbox"
   wtColors $defaultColor
 fi
 
@@ -360,6 +391,7 @@ fi
 # Create needed directories
 makeDirectories="\
 $installPath
+$HOME/images
 $HOME/.config/polybar
 $HOME/.config/i3
 $HOME/.config/dunst
@@ -377,14 +409,14 @@ done <<< "$makeDirectories"
 while read -r mdir; do
   let "i+=1"
   let "progress=$((i * 100 / countItems))"
-  mkdir -p $mdir && sleep .5 | wtMsg "Creating direectories..." "$mdir has been created." "gauge" $progress
+  mkdir -p $mdir && sleep .5 | wtMsg "Creating directories..." "$mdir has been created." "gauge" $progress
   echo "$mdir has been created." >> $installerLog
 done <<< "$makeDirectories"
 
 # Copy files
 cpDirectories="\
 $installerDir/config $installPath
-$installerDir/images $installPath
+$installerDir/assets $installPath
 $installerDir/scripts $installPath"
 
 i=0

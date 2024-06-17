@@ -1,3 +1,19 @@
+## 0.9.5
+### 2024-06-17
+
+- **modified:   README.md** : added 3D render
+- **modified:   assets/_images_**: mv images to assets, optimized compression
+- **new file:   assets/shortcuts.md** : shortcuts list (win + F1)
+- **modified:   config/i3** : daemonize urxvt, corrections
+- **modified:   config/polybar** : adding weather module (optionnal)
+- **modified:   config/vimrc** : toggle crosshair, line number
+- **modified:   install.sh** : check for vim as default (RIP Bram), mkdir ~/images, fzf package
+- **modified:   scripts/battery.py** : refresh status every second when plug
+- **modified:   scripts/sleepscreen.py** : add delays
+- **modified:   system/config.txt** : overcloking by default, remove i2c (added by install)
+- **modified:   version** : 0.9.5
+
+
 ## 0.9.4
 ### 2023-06-12
 

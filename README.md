@@ -8,17 +8,18 @@
 |_|                   |_|                  
 
 ```
-<img src="images/piComputer_blender.png" width="100%">
+
+<img src="assets/piComputer.jpg" width="100%">
 
 ## What the f* is it?
-A raspberry Pi Zero 2 with a weird wide screen and a 40% mechanical keyboard in a [3d-printed case](https://github.com/qtaped/picomputer/wiki/3dprint), inspired by [lisperati1000](https://github.com/drcode/lisperati-1000-diy).  
+A raspberry Pi Zero 2 with a weird wide screen (1920x480) and a 40% mechanical keyboard in a [3d-printed case](https://github.com/qtaped/picomputer/wiki/3dprint), inspired by [lisperati1000](https://github.com/drcode/lisperati-1000-diy).  
 I am a graphic designer, not an engineer neither a developer. You have been warn!
 
 > This project is at his early stage. It is not guaranteed to work. But it works. I guess.
 
 :rocket: **Configuring and installing piComputer is much simpler since 0.9.4 (June 2023).**   
 
-<img src="images/piComputer_screenshot.png" width="100%">
+<img src="assets/piComputer_screenshot.png" width="100%">
 
 The interface is based on [i3](https://i3wm.org/) + [polybar](https://github.com/polybar/polybar).  
 

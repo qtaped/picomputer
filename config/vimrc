@@ -1,4 +1,4 @@
-set mouse=a
+set background=dark
 set number
 set ignorecase
 set autoindent
@@ -15,15 +15,18 @@ set hlsearch "Highlights search terms"
 set incsearch "Highlights search terms as you type them"
 set showmatch "Highlights matching parentheses"
 
-"Press Enter to remove highlights"
+" press Enter to remove highlights
 nnoremap <CR> :noh<CR>
 
-" Bind ctrl+y copy to clipboard
+" bind ctrl+y copy to clipboard
 vnoremap <C-y> :'<,'>w !xclip -selection clipboard<Cr><Cr>
 
-" Allow crosshair cursor highlighting.
+" allow crosshair cursor highlighting
 hi CursorLine   cterm=NONE ctermbg=0
 hi CursorColumn cterm=NONE ctermbg=0
-" set cursorline! cursorcolumn!
+
+" toggle crosshair cursor
 nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
+" toggle lines number
+nnoremap <Leader>l :set number!<CR>
 

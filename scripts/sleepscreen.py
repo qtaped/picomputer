@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # pip install pynput
 import RPi.GPIO as GPIO
+import time
 from pynput.keyboard import Key, Listener
 
 Num = 8
@@ -13,17 +14,17 @@ GPIO.setup(Num, GPIO.OUT)
 state = GPIO.input(Num)
 
 if state:
-    f = open('/sys/class/leds/input0::capslock/brightness', 'w')
-    f.write('1')
     GPIO.output(Num, False)
+    f = open('/sys/class/leds/input0::capslock/brightness', 'w')
+    time.sleep(.2)
     f.write('1')
     f.close()
 
 def press(key):
+    GPIO.output(Num, True)
     f = open('/sys/class/leds/input0::capslock/brightness', 'w')
     f.write('0')
-    GPIO.output(Num, True)
-    f.write('0')
+    time.sleep(3)
     f.close()
     exit()
 

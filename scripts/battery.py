@@ -17,7 +17,7 @@ import time
 # 2047 - 1599 = 448
 # 448/4.48 = 100 (~ percentage)
 
-refresh = 10 #refresh battery status every x seconds
+default_refresh = 5 #refresh battery status every x seconds
 shutdown_level = 1 # shutdown piComputer at x%
 warning_level = 5
 
@@ -47,6 +47,7 @@ while True:
 
     if adc1 < 1024: # picomputer is not plugged to AC
  
+        refresh = default_refresh
         nicOn = round((level + 5) / 100 * barWidth)
         if nicOn < 0:nicOn = 0
         nicOff = barWidth - nicOn
@@ -76,9 +77,9 @@ while True:
             print("{0} bat.{1}".format(bar,level), flush=True)
 
     else: # picomputer is plugged to AC
+        refresh = 1
         if shutdown_sched == 1:
             cancelShutdown("AC plugged")
         print("{0} bat.{1}".format((barWidth-1)*icOff+plug,level), flush=True)
 
     time.sleep(refresh)
-

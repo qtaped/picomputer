@@ -84,11 +84,12 @@ for_window [window_role="pop-up"] floating enable
 for_window [title="piComputer wifi manager"] floating enable, resize set 960 442, move position 960 38
 
 # start a terminal
-bindsym $mod+Return exec urxvt
+bindsym $mod+Return exec urxvtc || (urxvtd -q -f -o && urxvtc)
 
 # start apps
-bindsym $mod+n exec exec urxvt -e ranger &
-bindsym $mod+Shift+w exec urxvt -e $scriptsDir/wifictl.sh &
+bindsym $mod+n exec exec urxvtc -e ranger &
+bindsym $mod+Shift+w exec urxvtc -e $scriptsDir/wifictl.sh &
+bindsym $mod+F1 exec urxvtc -e less -S $HOME/.picomputer/assets/shortcuts.md &
 
 # kill focused window
 bindsym $mod+q kill
@@ -271,13 +272,16 @@ exec_always --no-startup-id xmodmap ~/.Xmodmap
 exec_always --no-startup-id $scriptsDir/polybar.sh
 
 # Background
-exec_always --no-startup-id feh --bg-scale ~/.picomputer/images/background.png
+exec_always --no-startup-id feh --bg-scale ~/.picomputer/assets/background.png
 
 # Hide mouse cursor
 exec_always --no-startup-id $scriptsDir/xbanish &
+
+# Run urxvt as daemon
+exec_always --no-startup-id urxvtd -q -f -o
 
 # Allow user to control capslock led state (needed for scripts/sleepscreen.py)
 exec_always --no-startup-id sudo chown $USER /sys/class/leds/input0::capslock/brightness
 
 # Start Apps 
-# exec_always --no-startup-id urxvt -e tty-clock -cs -C 2
+# exec_always --no-startup-id urxvtc -e tty-clock -cs -C 2

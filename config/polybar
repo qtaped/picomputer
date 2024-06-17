@@ -126,6 +126,14 @@ format-padding = 1
 format-font = 3
 format-foreground = ${colors.dark}
 
+[module/weather]
+type = custom/script
+interval = 600
+format-padding = 1
+format-font = 3
+format-foreground = ${colors.dark}
+exec = curl -s 'wttr.in/?format=%t+%C+%w+%p'
+
 [module/pibattery]
 type = custom/script
 exec = ~/.picomputer/scripts/battery.py
